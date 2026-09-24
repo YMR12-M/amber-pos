@@ -1,0 +1,194 @@
+/* ============================================================================
+   AMBER POS — Design Tokens
+   ملف واحد لكل المتغيرات: الألوان، الخطوط، المسافات، الظلال، الحركة.
+   عدّل هنا فقط عشان تغيّر هوية النظام كله.
+   ========================================================================== */
+
+:root {
+  /* --- Brand ------------------------------------------------------------ */
+  --brand-500: #ff6b35;
+  --brand-400: #ff8a4d;
+  --brand-600: #ef4f16;
+  --brand-700: #c73c0c;
+  --brand-glow: 255 107 53;
+  /* التدرّج اللي بيشيل نص أبيض: كل نقطة فيه ≥ 4.56:1 مع الأبيض (AA) */
+  --brand-gradient: linear-gradient(135deg, #d44300 0%, #c23a02 52%, #ac3001 100%);
+  /* التدرّج الزخرفي (الشعار فقط — مفيش نص فوقه) */
+  --brand-gradient-vivid: linear-gradient(135deg, #ff8a3d 0%, #ff5a1f 52%, #ef4310 100%);
+  --brand-gradient-soft: linear-gradient(135deg, rgb(255 138 61 / 0.14), rgb(239 67 16 / 0.06));
+
+  --ink-900: #0b1020;
+  --ink-800: #131a2b;
+  --ink-700: #1c2333;
+  --ink-600: #2a3345;
+
+  /* --- Semantic (light) ------------------------------------------------- */
+  --app-bg: #f4f6fb;
+  --app-bg-2: #eceff7;
+  --surface: #ffffff;
+  --surface-2: #f7f9fd;
+  --surface-3: #eef2f9;
+  --surface-inset: #e9edf6;
+  --surface-glass: rgb(255 255 255 / 0.72);
+
+  --text: #0e1526;
+  --text-soft: #4a5568;
+  --text-muted: #677285; /* 4.64:1 على أصعب سطح فاتح */
+  --text-invert: #ffffff;
+
+  --line: rgb(14 21 38 / 0.09);
+  --line-strong: rgb(14 21 38 / 0.16);
+
+  --accent: var(--brand-500);
+  --accent-ink: #ffffff;
+  --accent-soft: rgb(255 107 53 / 0.12);
+
+  /* `--x` = لون العلامة (نقطة · حد · أيقونة)
+     `--x-ink` = لون النص فوق `--x-soft` — محسوب ليحقق 4.5:1 مع خلفيته */
+  --success: #12a150;
+  --success-soft: rgb(18 161 80 / 0.12);
+  --success-ink: #007f2f;
+  --warning: #d18700;
+  --warning-soft: rgb(209 135 0 / 0.14);
+  --warning-ink: #a05a00;
+  --danger: #dc2626;
+  --danger-soft: rgb(220 38 38 / 0.11);
+  --danger-ink: #d3181d;
+  --info: #2563eb;
+  --info-soft: rgb(37 99 235 / 0.12);
+  --info-ink: #2361e8;
+  --accent-ink-on-soft: #ac3001;
+
+  /* الأسطح الداكنة (السايدبار والدوك) ثابتة في الوضعين لهوية بصرية واحدة */
+  --panel: #131a2b;
+  --panel-2: #1b2438;
+  --panel-3: #253048;
+  --panel-text: #eef1f8;
+  --panel-text-soft: #9aa5bd;
+  --panel-line: rgb(255 255 255 / 0.09);
+
+  --dock-bg: #10162a;
+  --dock-notch: var(--app-bg);
+
+  /* --- Typography ------------------------------------------------------- */
+  --font-sans: "Cairo", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-num: "Inter", "Cairo", ui-sans-serif, system-ui, sans-serif;
+
+  --fs-2xs: 0.6875rem;  /* 11 */
+  --fs-xs: 0.75rem;     /* 12 */
+  --fs-sm: 0.8125rem;   /* 13 */
+  --fs-base: 0.9375rem; /* 15 */
+  --fs-md: 1rem;        /* 16 */
+  --fs-lg: 1.125rem;    /* 18 */
+  --fs-xl: 1.375rem;    /* 22 */
+  --fs-2xl: 1.75rem;    /* 28 */
+  --fs-3xl: 2.25rem;    /* 36 */
+  --fs-4xl: 3rem;       /* 48 */
+
+  /* --- Spacing (4px scale) ---------------------------------------------- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  --page-pad: clamp(16px, 2.2vw, 32px);
+  --sidebar-w: 340px;
+  --topbar-h: 68px;
+  --dock-h: 132px;
+  /* أرضية أهداف اللمس: 44px لكل عنصر تفاعلي (WCAG 2.5.5 / Apple HIG)
+     و 48px على مسار الكاشير الأساسي (المنيو · السلة · الدفع · الإرسال) */
+  --touch: 48px;
+  --touch-min: 44px;
+
+  /* --- Radii ------------------------------------------------------------ */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-2xl: 36px;
+  --r-full: 999px;
+
+  /* --- Elevation (طبقتين: ظل محيط + ظل اتجاهي) -------------------------- */
+  --sh-xs: 0 1px 2px rgb(14 21 38 / 0.05);
+  --sh-sm: 0 1px 2px rgb(14 21 38 / 0.05), 0 2px 8px rgb(14 21 38 / 0.05);
+  --sh-md: 0 2px 4px rgb(14 21 38 / 0.04), 0 8px 20px rgb(14 21 38 / 0.07);
+  --sh-lg: 0 4px 8px rgb(14 21 38 / 0.05), 0 18px 40px rgb(14 21 38 / 0.11);
+  --sh-xl: 0 8px 16px rgb(14 21 38 / 0.06), 0 32px 68px rgb(14 21 38 / 0.16);
+  --sh-brand: 0 6px 16px rgb(var(--brand-glow) / 0.32), 0 2px 4px rgb(var(--brand-glow) / 0.18);
+  --sh-panel: 0 24px 60px rgb(11 16 32 / 0.28);
+
+  --ring: 0 0 0 3px rgb(var(--brand-glow) / 0.35);
+
+  /* --- Motion ----------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+  --t-fast: 120ms;
+  --t-base: 200ms;
+  --t-slow: 380ms;
+
+  /* --- Layers ----------------------------------------------------------- */
+  --z-dock: 60;
+  --z-topbar: 40;
+  --z-modal: 100;
+  --z-toast: 120;
+
+  color-scheme: light;
+}
+
+/* ============================== الوضع الداكن ============================== */
+:root[data-theme="dark"] {
+  --app-bg: #080b14;
+  --app-bg-2: #0c111d;
+  --surface: #121826;
+  --surface-2: #171f30;
+  --surface-3: #1e273b;
+  --surface-inset: #0e1420;
+  --surface-glass: rgb(18 24 38 / 0.74);
+
+  --text: #eaeefa;
+  --text-soft: #a8b3c9;
+  --text-muted: #7c88a2; /* 4.65:1 على أصعب سطح داكن */
+
+  --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.16);
+
+  --accent-soft: rgb(255 107 53 / 0.16);
+  --success-soft: rgb(18 161 80 / 0.18);
+  --success-ink: #22a958;
+  --warning-soft: rgb(209 135 0 / 0.2);
+  --warning-ink: #d18700;
+  --danger-soft: rgb(220 38 38 / 0.18);
+  --danger-ink: #fb4a42;
+  --info-soft: rgb(37 99 235 / 0.2);
+  --info-ink: #4a8cff;
+  --accent-ink-on-soft: #ff8a4d;
+
+  --panel: #0f1523;
+  --panel-2: #161e2f;
+  --panel-3: #202a40;
+
+  --dock-bg: #0d1322;
+  --dock-notch: var(--app-bg);
+
+  --sh-xs: 0 1px 2px rgb(0 0 0 / 0.4);
+  --sh-sm: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.32);
+  --sh-md: 0 2px 4px rgb(0 0 0 / 0.35), 0 8px 20px rgb(0 0 0 / 0.4);
+  --sh-lg: 0 4px 8px rgb(0 0 0 / 0.4), 0 18px 40px rgb(0 0 0 / 0.5);
+  --sh-xl: 0 8px 16px rgb(0 0 0 / 0.45), 0 32px 68px rgb(0 0 0 / 0.6);
+  --sh-panel: 0 24px 60px rgb(0 0 0 / 0.6);
+
+  color-scheme: dark;
+}
+
+/* شاشة المطبخ: تباين أعلى وخط أكبر لأنها بتتقرا من بعيد */
+:root[data-density="kitchen"] {
+  --fs-base: 1rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+}

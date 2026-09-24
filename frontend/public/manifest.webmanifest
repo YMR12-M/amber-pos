@@ -1,0 +1,54 @@
+{
+  "name": "عنبر POS — نظام إدارة المطاعم والكافيهات",
+  "short_name": "عنبر POS",
+  "description": "من أول طلب لآخر فاتورة — في شاشة واحدة.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "lang": "ar",
+  "dir": "rtl",
+  "display": "standalone",
+  "display_override": [
+    "fullscreen",
+    "standalone"
+  ],
+  "orientation": "landscape",
+  "background_color": "#0b1020",
+  "theme_color": "#f4f6fb",
+  "categories": [
+    "business",
+    "food",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "/logo-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "نقطة البيع",
+      "short_name": "كاشير",
+      "url": "/pos"
+    },
+    {
+      "name": "شاشة المطبخ",
+      "short_name": "مطبخ",
+      "url": "/kitchen"
+    },
+    {
+      "name": "لوحة التحكم",
+      "short_name": "إدارة",
+      "url": "/admin"
+    }
+  ]
+}

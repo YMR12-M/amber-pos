@@ -1,0 +1,23 @@
+<!-- مولّد آلياً بـ `npm run brand` من src/components/brand/geometry.ts — ما تعدّلش هنا. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff8a3d"/><stop offset="52%" stop-color="#ff5a1f"/><stop offset="100%" stop-color="#ef4310"/></linearGradient>
+    <radialGradient id="glowA"><stop offset="0%" stop-color="#ff6b35" stop-opacity="0.34"/><stop offset="100%" stop-color="#ff6b35" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowB"><stop offset="0%" stop-color="#2563eb" stop-opacity="0.26"/><stop offset="100%" stop-color="#2563eb" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M56 0H0v56" fill="none" stroke="#fff" stroke-opacity="0.03" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="#0b1020"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <ellipse cx="930" cy="120" rx="520" ry="380" fill="url(#glowA)"/>
+  <ellipse cx="180" cy="580" rx="460" ry="340" fill="url(#glowB)"/>
+  <g transform="translate(848 160) scale(3.6)">
+    <path d="M24 1.5c9.1 0 13.6 0 17.2 2.4A11 11 0 0 1 44.1 6.8C46.5 10.4 46.5 14.9 46.5 24s0 13.6-2.4 17.2a11 11 0 0 1-2.9 2.9C37.6 46.5 33.1 46.5 24 46.5s-13.6 0-17.2-2.4a11 11 0 0 1-2.9-2.9C1.5 37.6 1.5 33.1 1.5 24s0-13.6 2.4-17.2A11 11 0 0 1 6.8 3.9C10.4 1.5 14.9 1.5 24 1.5Z" fill="url(#mark)"/>
+    <g fill="#fff"><circle cx="24" cy="14.8" r="2.3"/><path d="M9.5 28a14.5 9.6 0 0 1 29 0Z"/><rect x="7" y="30.2" width="34" height="4.4" rx="2.2"/></g>
+  </g>
+  <text x="756" y="288" text-anchor="end" font-family="Cairo, 'Geeza Pro', 'SF Arabic', sans-serif" font-size="112" font-weight="800" fill="#fff">عنبر</text>
+  <text x="756" y="348" text-anchor="end" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="24" font-weight="700" fill="#ff8a4d" letter-spacing="10">AMBER POS</text>
+  <text x="756" y="424" text-anchor="end" font-family="Cairo, 'Geeza Pro', 'SF Arabic', sans-serif" font-size="36" font-weight="600" fill="#a8b3c9">نظام إدارة المطاعم والكافيهات</text>
+  <text x="756" y="480" text-anchor="end" font-family="Cairo, 'Geeza Pro', 'SF Arabic', sans-serif" font-size="28" font-weight="700" fill="#eaeefa">كاشير · مطبخ · إدارة — في شاشة واحدة</text>
+</svg>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f4f6fb" />
+    <meta name="color-scheme" content="light dark" />
+
+    <title>عنبر POS — إدارة المطاعم والكافيهات</title>
+    <meta name="application-name" content="عنبر POS" />
+    <meta name="description" content="عنبر POS — من أول طلب لآخر فاتورة في شاشة واحدة. كاشير · مطبخ · إدارة." />
+
+    <!-- الهوية: أيقونة واحدة بنفس هندسة components/brand/Logo.tsx -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo-mark.svg" />
+    <link rel="mask-icon" href="/logo-mono.svg" color="#ef4310" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- تشغيل كتطبيق على تابلت الكاشير (بدون شريط المتصفح) -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="عنبر POS" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- بطاقة المشاركة -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ar_EG" />
+    <meta property="og:site_name" content="عنبر POS" />
+    <meta property="og:title" content="عنبر POS — نظام إدارة المطاعم والكافيهات" />
+    <meta property="og:description" content="من أول طلب لآخر فاتورة — في شاشة واحدة. كاشير · مطبخ · إدارة." />
+    <meta property="og:image" content="/og.svg" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // تطبيق الثيم قبل أول رسمة — بيمنع "وميض" الشاشة البيضا
+      (function () {
+        try {
+          var saved = localStorage.getItem("amber-pos-theme");
+          var dark =
+            saved === "dark" ||
+            (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.dataset.theme = dark ? "dark" : "light";
+          document
+            .querySelector('meta[name="theme-color"]')
+            .setAttribute("content", dark ? "#080b14" : "#f4f6fb");
+        } catch (e) {}
+      })();
+    </script>
+
+    <style>
+      /* شاشة الإقلاع — بتترسم قبل ما أي JS يتحمّل، فأول إطار على
+         تابلت الكاشير يبقى موسوم مش أبيض. React بيمسحها لما يركّب. */
+      #boot {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: #0b1020;
+        z-index: 9999;
+      }
+      #boot svg { animation: boot-in 700ms cubic-bezier(0.34, 1.4, 0.5, 1) both; }
+      @keyframes boot-in {
+        from { opacity: 0; transform: scale(0.86); }
+        to { opacity: 1; transform: none; }
+      }
+      @media (prefers-reduced-motion: reduce) { #boot svg { animation: none; } }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="boot">
+        <!-- brand:boot:start -->
+        <svg width="88" height="88" viewBox="0 0 48 48" fill="none" role="img" aria-label="عنبر POS"><defs><linearGradient id="boot-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff8a3d"/><stop offset="52%" stop-color="#ff5a1f"/><stop offset="100%" stop-color="#ef4310"/></linearGradient></defs><path d="M24 1.5c9.1 0 13.6 0 17.2 2.4A11 11 0 0 1 44.1 6.8C46.5 10.4 46.5 14.9 46.5 24s0 13.6-2.4 17.2a11 11 0 0 1-2.9 2.9C37.6 46.5 33.1 46.5 24 46.5s-13.6 0-17.2-2.4a11 11 0 0 1-2.9-2.9C1.5 37.6 1.5 33.1 1.5 24s0-13.6 2.4-17.2A11 11 0 0 1 6.8 3.9C10.4 1.5 14.9 1.5 24 1.5Z" fill="url(#boot-g)"/><g fill="#fff"><circle cx="24" cy="14.8" r="2.3"/><path d="M9.5 28a14.5 9.6 0 0 1 29 0Z"/><rect x="7" y="30.2" width="34" height="4.4" rx="2.2"/></g></svg>
+        <!-- brand:boot:end -->
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

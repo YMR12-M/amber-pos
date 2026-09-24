@@ -1,0 +1,191 @@
+/* ============================================================================
+   عنبر · AMBER POS — الفاتورة والطباعة (80mm thermal)
+
+   الطابعة الحرارية بتعرف أسود وأبيض بس — مفيش تدرّجات ولا رمادي حقيقي
+   (بيتحوّل لنقط متفرّقة). فكل حاجة هنا إما #000 أو #fff، والفواصل
+   بتتعمل بخطوط متقطّعة مش بظلال.
+   ========================================================================== */
+
+.receipt {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.7;
+  color: #000;
+  background: #fff;
+  padding: var(--sp-4);
+  border-radius: var(--r-sm);
+  border: 1px dashed var(--line-strong);
+}
+
+/* ------------------------------- المنشأة --------------------------------- */
+.receipt__head { text-align: center; padding-bottom: var(--sp-2); }
+.receipt__logo { display: flex; justify-content: center; margin-bottom: 6px; }
+
+.receipt__merchant {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+.receipt__branch { font-size: 12px; font-weight: 700; }
+.receipt__contact { font-size: 11px; font-weight: 600; }
+.receipt__tax {
+  font-family: var(--font-num);
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* رقم الفاتورة — أكبر حاجة بعد الإجمالي، لأنه المرجع في أي مرتجع */
+.receipt__no {
+  font-family: var(--font-num);
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* ------------------------------- البيانات -------------------------------- */
+.receipt__meta { margin-top: var(--sp-2); }
+.receipt__meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+/* التسمية أخف من القيمة عشان العين تمسك القيم في عمود واحد */
+.receipt__meta-row > span:first-child { opacity: 0.72; white-space: nowrap; }
+/* nowrap مهم: القيم دي (تاريخ · مرجع) متغلّفة بعازل اتجاه، ولو لفّت
+   على سطرين العازل بينكسر والتاريخ بيتقرا مقلوب. */
+.receipt__meta-row > span:last-child {
+  font-weight: 700;
+  text-align: end;
+  white-space: nowrap;
+}
+
+.receipt__rule {
+  border: 0;
+  border-top: 1px dashed #000;
+  margin: var(--sp-3) 0;
+  opacity: 0.55;
+}
+
+/* -------------------------------- البنود --------------------------------- */
+.receipt__table { width: 100%; border-collapse: collapse; }
+.receipt__table th {
+  text-align: start;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 0;
+  border-bottom: 1px solid #000;
+}
+.receipt__table td {
+  text-align: start;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 0;
+  vertical-align: top;
+}
+.receipt__table th:last-child,
+.receipt__table td:last-child { text-align: end; white-space: nowrap; width: 78px; }
+
+/* الاسم فوق، والحساب (كمية × سعر) تحته أصغر —
+   الشكل ده بيستحمل أسماء أصناف طويلة من غير ما الأعمدة تتكسّر */
+.receipt__item-name { display: block; font-weight: 700; }
+.receipt__item-calc {
+  display: block;
+  font-family: var(--font-num);
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.78;
+}
+.receipt__item-note {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  font-style: italic;
+  opacity: 0.78;
+}
+
+/* ------------------------------- المجاميع -------------------------------- */
+.receipt__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 0;
+}
+.receipt__row--pay { margin-top: 6px; font-weight: 700; }
+
+.receipt__grand {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 18px;
+  font-weight: 800;
+  padding-top: 8px;
+  margin-top: 6px;
+  border-top: 2px solid #000;
+}
+
+/* ------------------------------- التذييل --------------------------------- */
+.receipt__foot { text-align: center; margin-top: var(--sp-3); }
+.receipt__thanks { font-size: 12px; font-weight: 700; }
+.receipt__ref {
+  font-family: var(--font-num);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+/* توقيع النظام — أصغر سطر في الورقة عن قصد: العلامة بتوقّع، مش بتزاحم */
+.receipt__by {
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 6px;
+  padding-top: 5px;
+  border-top: 1px dashed #000;
+  opacity: 0.65;
+}
+
+.receipt .num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+/* ---------------------------- وقت الطباعة فقط ---------------------------- */
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 4mm;
+  }
+
+  html, body {
+    height: auto;
+    overflow: visible;
+    background: #fff;
+  }
+  body::before { display: none; }
+
+  /* نخفي كل حاجة ماعدا الفاتورة */
+  body * { visibility: hidden; }
+  .receipt, .receipt * { visibility: visible; }
+
+  .receipt {
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    font-size: 12px;
+  }
+
+  /* الطابعة الحرارية مش بتطبع شفافية — نرجّع كل حاجة أسود صريح */
+  .receipt__meta-row > span:first-child,
+  .receipt__item-calc,
+  .receipt__item-note,
+  .receipt__ref,
+  .receipt__by,
+  .receipt__rule { opacity: 1; }
+}
