@@ -108,7 +108,7 @@ export function DialogProvider({ children }: { children: ReactNode }) {
         }
       >
         {opts?.message && (
-          <p style={{ color: "var(--text-soft)", fontWeight: 600 }}>{opts.message}</p>
+          <p style={{ color: "var(--ink-soft)", fontWeight: 600 }}>{opts.message}</p>
         )}
         {isPrompt && (
           <div style={{ marginTop: 12 }}>

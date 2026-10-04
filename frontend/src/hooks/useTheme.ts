@@ -37,7 +37,8 @@ export function useTheme() {
     }
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", theme === "dark" ? "#080b14" : "#f4f6fb");
+      // لون شريط الترويسة (داكن في الوضعين) — نفس قيم index.html و tokens.css
+      ?.setAttribute("content", theme === "dark" ? "#0f0a07" : "#2b1f17");
   }, [theme]);
 
   const toggle = useCallback(() => setTheme((t) => (t === "dark" ? "light" : "dark")), []);

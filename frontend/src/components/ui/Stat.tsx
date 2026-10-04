@@ -8,16 +8,20 @@ export function Stat({
   icon,
   foot,
   accent,
+  danger,
 }: {
   label: string;
   value: ReactNode;
   unit?: string;
   icon?: ReactNode;
   foot?: ReactNode;
+  /** لوحة عنبرية — المؤشر الأهم في الشاشة */
   accent?: boolean;
+  /** لوحة حمرا — حاجة محتاجة تدخّل (طلبات متأخرة) */
+  danger?: boolean;
 }) {
   return (
-    <div className={cn("stat", accent && "stat--accent")}>
+    <div className={cn("stat", accent && "stat--accent", danger && "stat--danger")}>
       <div className="stat__label">
         {icon}
         {label}

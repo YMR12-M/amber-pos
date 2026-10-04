@@ -11,7 +11,7 @@
 AMBER POS/
 ├── backend/     → Node + Express + TypeScript + MySQL API
 ├── frontend/    → React + TypeScript (الإدارة / الكاشير / المطبخ)
-├── DESIGN.md    → نظام التصميم (Amber POS)
+├── DESIGN.md    → نظام التصميم: هيكل تقليدي بمظهر ورق الكافيه
 └── BRAND.md     → دليل الهوية: الشعار · التجميعة · النبرة · الفاتورة
 ```
 
@@ -139,11 +139,12 @@ mysqldump -u <user> -p pos_system > backup-$(date +%F).sql
 ```
 frontend/src/
 ├── styles/                 ← كل الـ CSS (مفيش ستايل متناثر)
-│   ├── tokens.css          · الألوان والخطوط والمسافات ← ابدأ من هنا
-│   ├── base.css            · reset · سكرول · فوكس · حركات
-│   ├── layout.css          · الشِل · التوب بار · السايدبار · الدوك
-│   ├── components.css      · الأزرار · الكروت · الحقول · المودال …
-│   ├── features.css        · أنماط الشاشات + الرسوم البيانية
+│   ├── tokens.css          · الورق والحبر والخطوط والمسافات ← ابدأ من هنا
+│   ├── base.css            · reset · ملمس الورق · فوكس · حركات
+│   ├── brand.css           · الاسم · التجميعة · السطح الموسوم
+│   ├── layout.css          · الشِل · الترويسة · التبويبات · لوحة الشيك
+│   ├── components.css      · المفاتيح · الورق · الحقول · المودال · الختم …
+│   ├── features.css        · أنماط الشاشات (كاشير · مطبخ · طاولات · دخول) + الرسوم البيانية
 │   └── print.css           · الفاتورة (80mm)
 │
 ├── components/
@@ -151,12 +152,14 @@ frontend/src/
 │   │   ├── brand.ts        · الاسم · الوصف · الإصدار
 │   │   ├── geometry.ts     · مسارات الشعار — مصدر واحد لكل الأصول
 │   │   └── Logo.tsx        · LogoMark · Wordmark · Logo
-│   ├── icons/index.tsx     ← كل الأيقونات SVG inline
+│   ├── icons/
+│   │   ├── index.tsx       ← أيقونات الواجهة SVG inline
+│   │   └── glyphs.tsx      ← رسومات الأقسام (قهوة · شاي · حلويات …) حسب اسم القسم
 │   ├── ui/                 ← مكتبة الواجهة (Button, Modal, Toast …)
-│   └── layout/             ← AppShell · TopBar · Sidebar · Dock
+│   └── layout/             ← AppShell · TopBar · ModeTabs · Ticket
 │
 ├── features/               ← منطق + عرض كل شاشة
-│   ├── pos/                · useCart · usePosData · MenuGrid · CartPanel …
+│   ├── pos/                · useCart · usePosData · CategoryRail · MenuGrid · CartPanel · TablePicker …
 │   ├── kitchen/            · useKitchenQueue · KitchenCard
 │   └── admin/              · CategoryManager · MenuManager · TablesManager
 │                             · StaffManager · SettingsManager
@@ -167,7 +170,7 @@ frontend/src/
 │   ├── AuthContext.tsx     · المستخدم الحالي
 │   └── SettingsContext.tsx · بيانات المحل والعملة ← من الـ API مش من الكود
 ├── hooks/                  ← useTheme · usePolling · useClock · useAsyncList
-├── lib/                    ← format (فلوس/تواريخ) · roles · cn
+├── lib/                    ← format (فلوس/تواريخ) · roles · hue (لون القسم) · cn
 ├── api.ts                  ← كل نداءات السيرفر
 └── types.ts                ← الأنواع المشتركة
 ```
@@ -179,8 +182,10 @@ frontend/src/
 | اسم محلك · عنوانك · رقمك الضريبي · العملة · الضريبة | **لوحة التحكم ← الإعدادات** (مش في الكود) |
 | الألوان أو الخطوط أو المسافات | `styles/tokens.css` |
 | اسم **النظام** نفسه أو شعاره | `components/brand/brand.ts` + `geometry.ts` ثم `npm run brand` |
-| شكل شريط التنقل | `components/layout/Dock.tsx` + `styles/layout.css` |
-| عناصر التنقل في شاشة | `dockItems` جوّه ملف الصفحة في `pages/` |
+| شكل التبويبات في الترويسة | `components/layout/ModeTabs.tsx` + `styles/layout.css` |
+| تبويبات شاشة | `tabs` جوّه ملف الصفحة في `pages/` |
+| ألوان الأقسام | `--cat-1 … --cat-8` في `styles/tokens.css` (واللون بيتحدّد بـ id القسم من `lib/hue.ts`) |
+| رسمة قسم | `components/icons/glyphs.tsx` — بتتختار من اسم القسم |
 | شكل زر أو حقل | `components/ui/` + `styles/components.css` |
 | منطق السلة | `features/pos/useCart.ts` |
 | شكل الفاتورة | `components/Receipt.tsx` + `styles/print.css` |
@@ -277,13 +282,14 @@ npm run typecheck
 | **chunks ثابتة** | React و router في ملفات منفصلة تفضل في الكاش بين النسخ |
 | **التحديث الدوري** | `usePolling` بيقف لما التبويب يتخفي، وبيحدّث فوراً أول ما ترجع |
 | **إعادة الرسم** | `memo` على كروت المنيو والطلبات — السلة ما بتعيدش رسم الشبكة |
-| **`content-visibility`** | شبكات الكروت الطويلة ما بتترسمش وهي بره الشاشة |
-| **مفيش صور** | الشعار والأيقونات كلها SVG inline — حادّة على أي كثافة بكسل |
+| **`content-visibility`** | شبكة القصاصات الطويلة ما بتترسمش وهي بره الشاشة |
+| **مفيش صور** | الشعار والأيقونات ورسومات الأقسام كلها SVG inline — حادّة على أي كثافة بكسل |
+| **الخطوط** | El Messiri · IBM Plex Sans Arabic · IBM Plex Mono من Google Fonts (CSP مسموح لها بالاسم) |
 | **الثيم قبل الرسم** | سكربت صغير في `index.html` بيمنع وميض الشاشة البيضا |
 | **الوضع الداكن** | ألوان مختارة لكل وضع، مش مجرد قلب |
 | **RTL** | خصائص منطقية في كل حتة — التحويل لـ LTR ما بيحتاجش تعديل |
 | **إتاحة** | `<main>` + مخطط عناوين · رابط تخطي · حبس فوكس في المودال · تنقّل بالأسهم · صفر هدف لمس تحت 44px · `prefers-reduced-motion` |
-| **تباين** | 33 من 35 زوج لون بيحققوا AA أو AAA (محسوبين بمعادلة WCAG) |
+| **تباين** | 51 زوج لون في كل وضع (فاتح وليلي) كلهم بيحققوا الحد الأدنى — النص ≥ 4.5:1 والعناصر الرسومية ≥ 3:1 (محسوبين بمعادلة WCAG) |
 
 ---
 

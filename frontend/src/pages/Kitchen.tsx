@@ -3,12 +3,14 @@ import { api } from "../api";
 import type { KitchenOrder, OrderItemStatus, OrderStatus } from "../types";
 import { minutesSince } from "../lib/format";
 import { usePolling } from "../hooks/usePolling";
-import { AppShell, Sidebar, SummaryRow } from "../components/layout";
+import { AppShell } from "../components/layout";
+import { orderNo } from "../components/brand";
 import {
   EmptyState,
   ErrorLine,
   IconButton,
   SkeletonGrid,
+  Stat,
   useToast,
 } from "../components/ui";
 import {
@@ -31,7 +33,7 @@ const FILTER_MATCH: Record<Exclude<Filter, "all">, OrderStatus[]> = {
 
 const LATE_MINUTES = 15;
 
-/** شاشة المطبخ — طابور الطلبات وتحديث حالتها. */
+/** شاشة المطبخ — لوحة البونات: طابور الطلبات وتحديث حالتها. */
 export default function Kitchen() {
   const [filter, setFilter] = useState<Filter>("all");
   const { orders, error, loading, refresh, setError } = useKitchenQueue();
@@ -65,7 +67,7 @@ export default function Kitchen() {
     async (orderId: number) => {
       try {
         await api.updateOrderStatus(orderId, "ready");
-        toast.success(`الطلب #${orderId} جاهز`);
+        toast.success(`الطلب ${orderNo(orderId)} جاهز`);
         await refresh();
       } catch (err) {
         toast.fromError(err, "فشل التحديث");
@@ -90,12 +92,12 @@ export default function Kitchen() {
     [orders, filter]
   );
 
-  const dockItems = useMemo(
+  const tabs = useMemo(
     () => [
-      { id: "all", label: "كل الطلبات", icon: <IconChef />, badge: orders.length || undefined },
-      { id: "pending", label: "قيد الانتظار", icon: <IconClock />, badge: counts.pending || undefined },
-      { id: "preparing", label: "جاري التحضير", icon: <IconFire />, badge: counts.preparing || undefined },
-      { id: "ready", label: "جاهز", icon: <IconCheck />, badge: counts.ready || undefined },
+      { id: "all", label: "كل الطلبات", icon: <IconChef size={20} />, badge: orders.length || undefined },
+      { id: "pending", label: "قيد الانتظار", icon: <IconClock size={20} />, badge: counts.pending || undefined },
+      { id: "preparing", label: "جاري التحضير", icon: <IconFire size={20} />, badge: counts.preparing || undefined },
+      { id: "ready", label: "جاهز", icon: <IconCheck size={20} />, badge: counts.ready || undefined },
     ],
     [orders.length, counts]
   );
@@ -103,50 +105,33 @@ export default function Kitchen() {
   return (
     <AppShell
       title="شاشة المطبخ"
-      subtitle="طابور التحضير — من غير أي بيانات مالية"
+      subtitle="بيتحدّث كل 5 ثواني — من غير أي بيانات مالية"
       actions={
         <IconButton
           label="تحديث الآن"
-          variant="plain"
+          variant="onbar"
           icon={<IconRefresh size={20} />}
           onClick={refresh}
         />
       }
-      dockItems={dockItems}
-      activeDockId={filter}
-      onDockSelect={(id) => setFilter(id as Filter)}
-      sidebar={
-        <Sidebar title="حالة المطبخ" hint="بيتحدّث كل 5 ثواني">
-          <div className="u-col" style={{ gap: 20 }}>
-            <div>
-              <div className="sidebar__hint">طلبات في الطابور</div>
-              <div className="total-amount">{orders.length}</div>
-            </div>
-            {counts.late > 0 && (
-              <div>
-                <div className="sidebar__hint" style={{ color: "#ff9a9a" }}>
-                  متأخرة عن {LATE_MINUTES} دقيقة
-                </div>
-                <div className="total-amount" style={{ background: "none", color: "#ff8080" }}>
-                  {counts.late}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div style={{ marginTop: "auto", paddingTop: 20 }}>
-            <SummaryRow label="قيد الانتظار" value={counts.pending} />
-            <SummaryRow label="جاري التحضير" value={counts.preparing} />
-            <SummaryRow label="جاهز" value={counts.ready} total />
-          </div>
-        </Sidebar>
-      }
+      tabs={tabs}
+      activeTab={filter}
+      onTabSelect={(id) => setFilter(id as Filter)}
     >
       <div className="section">
         <ErrorLine message={error} />
 
+        {/* لوحة النتيجة: أرقام الطابور بنظرة واحدة من بعيد */}
+        <div className="scoreboard" aria-label="حالة المطبخ">
+          <Stat label="في الطابور" value={orders.length} />
+          <Stat label="قيد الانتظار" value={counts.pending} />
+          <Stat label="جاري التحضير" value={counts.preparing} />
+          <Stat label="جاهز" value={counts.ready} />
+          {counts.late > 0 && <Stat danger label={`متأخرة +${LATE_MINUTES} د`} value={counts.late} />}
+        </div>
+
         {loading ? (
-          <SkeletonGrid count={6} height={280} />
+          <SkeletonGrid className="board" count={4} height={300} />
         ) : visible.length === 0 ? (
           <EmptyState
             icon={<IconChef size={30} />}
@@ -154,7 +139,7 @@ export default function Kitchen() {
             text="أول ما الكاشير يبعت طلب هيظهر هنا فوراً."
           />
         ) : (
-          <div className="grid-cards">
+          <div className="board">
             {visible.map((order) => (
               <KitchenCard
                 key={order.id}

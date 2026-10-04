@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react
 import { api } from "../../../api";
 import type { Category, MenuItem } from "../../../types";
 import { money } from "../../../lib/format";
+import { hueOf } from "../../../lib/hue";
 import { useSettings } from "../../../context/SettingsContext";
 import {
   Badge,
@@ -259,7 +260,12 @@ export function MenuManager() {
                 {visible.map((item) => (
                   <tr key={item.id}>
                     <td style={{ fontWeight: 700 }}>{item.name}</td>
-                    <td className="u-muted">{categoryName(item.category_id)}</td>
+                    <td className="u-muted">
+                      <span className="u-row" data-hue={hueOf(item.category_id)}>
+                        <span className="swatch" aria-hidden="true" />
+                        {categoryName(item.category_id)}
+                      </span>
+                    </td>
                     <td className="num" style={{ fontWeight: 700 }}>
                       {money(item.price)} {currency}
                     </td>

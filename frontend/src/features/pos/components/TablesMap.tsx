@@ -1,22 +1,20 @@
 import { memo } from "react";
 import type { RestaurantTable, TableStatus } from "../../../types";
 import { TABLE_STATUS_LABELS } from "../../../types";
-import { Badge, EmptyState } from "../../../components/ui";
+import { EmptyState } from "../../../components/ui";
 import { IconTable } from "../../../components/icons";
+import { TableTile } from "./TableTile";
 
-const TONE: Record<TableStatus, "ready" | "cancelled" | "pending"> = {
-  free: "ready",
-  occupied: "cancelled",
-  reserved: "pending",
-};
+const LEGEND: TableStatus[] = ["free", "occupied", "reserved"];
 
-/** خريطة الطاولات — نظرة سريعة على القاعة. */
+/** خريطة القاعة — نظرة سريعة على الطاولات: رسمة من فوق + حالتها. */
 export const TablesMap = memo(function TablesMap({ tables }: { tables: RestaurantTable[] }) {
   if (tables.length === 0) {
     return <EmptyState icon={<IconTable size={30} />} title="مفيش طاولات مسجّلة" />;
   }
 
-  const free = tables.filter((t) => t.status === "free").length;
+  const counts: Record<TableStatus, number> = { free: 0, occupied: 0, reserved: 0 };
+  for (const t of tables) counts[t.status]++;
 
   return (
     <div className="section">
@@ -24,26 +22,25 @@ export const TablesMap = memo(function TablesMap({ tables }: { tables: Restauran
         <div>
           <h2 className="section__title">خريطة القاعة</h2>
           <div className="section__desc">
-            {free} متاحة من {tables.length}
+            {counts.free} متاحة من {tables.length}
           </div>
         </div>
+
+        {/* مفتاح الخريطة */}
+        <ul className="legend legend--lamps" aria-label="مفتاح الحالات">
+          {LEGEND.map((s) => (
+            <li key={s} className="legend__item" data-status={s}>
+              <span className="tabletile__lamp" aria-hidden="true" />
+              <span className="legend__label">{TABLE_STATUS_LABELS[s]}</span>
+              <span className="legend__value num">{counts[s]}</span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="grid-tiles">
         {tables.map((t) => (
-          <div key={t.id} className="tabletile" data-status={t.status}>
-            <span className="tabletile__label">{t.label}</span>
-            {t.active_order_id && (
-              <span className="u-muted" style={{ fontSize: "var(--fs-xs)", fontWeight: 700 }}>
-                طلب مفتوح #{t.active_order_id}
-              </span>
-            )}
-            <span className="tabletile__foot">
-              <Badge tone={TONE[t.status]} dot>
-                {TABLE_STATUS_LABELS[t.status]}
-              </Badge>
-            </span>
-          </div>
+          <TableTile key={t.id} table={t} />
         ))}
       </div>
     </div>

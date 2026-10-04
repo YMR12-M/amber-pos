@@ -23,39 +23,39 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { BAR, DOME, GRADIENT, KNOB, MONO_PATH, SQUIRCLE } from "../src/components/brand/geometry.ts";
+import {
+  BAR,
+  COLORS,
+  DISK,
+  DOME,
+  KNOB,
+  MONO_PATH,
+  SHADOW,
+} from "../src/components/brand/geometry.ts";
 import { BRAND } from "../src/components/brand/brand.ts";
 
 const PUBLIC = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
 const NOTE = `<!-- مولّد آلياً بـ \`npm run brand\` من src/components/brand/geometry.ts — ما تعدّلش هنا. -->`;
 
-const stops = (id) =>
-  `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">` +
-  GRADIENT.map((s) => `<stop offset="${s.at}" stop-color="${s.color}"/>`).join("") +
-  `</linearGradient>`;
-
-/** الغطاء الأبيض: مقبض · قبّة · قاعدة. */
-const cloche = (fill = "#fff") =>
+/** غطاء التقديم: مقبض · قبّة · قاعدة. */
+const cloche = (fill = COLORS.ink) =>
   `<g fill="${fill}">` +
   `<circle cx="${KNOB.cx}" cy="${KNOB.cy}" r="${KNOB.r}"/>` +
   `<path d="${DOME}"/>` +
   `<rect x="${BAR.x}" y="${BAR.y}" width="${BAR.w}" height="${BAR.h}" rx="${BAR.r}"/>` +
   `</g>`;
 
+/** بادج المينا كامل: سُمك مصمت مزاح · قرص عنبر بحلقة حبر · الغطاء. */
+const badge = () =>
+  `<circle cx="${DISK.cx + SHADOW.dx}" cy="${DISK.cy + SHADOW.dy}" r="${DISK.r + DISK.stroke / 2}" fill="${COLORS.ink}"/>` +
+  `<circle cx="${DISK.cx}" cy="${DISK.cy}" r="${DISK.r}" fill="${COLORS.amber}" stroke="${COLORS.ink}" stroke-width="${DISK.stroke}"/>` +
+  cloche();
+
 const files = {
   /* ------------------------------ الأيقونة ------------------------------ */
   "favicon.svg": `${NOTE}
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="${BRAND.name} ${BRAND.suffix}">
-  <defs>
-    ${stops("bg")}
-    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#fff" stop-opacity="0.32"/>
-      <stop offset="58%" stop-color="#fff" stop-opacity="0"/>
-    </linearGradient>
-  </defs>
-  <path d="${SQUIRCLE}" fill="url(#bg)"/>
-  <path d="${SQUIRCLE}" fill="url(#gloss)"/>
-  ${cloche()}
+  ${badge()}
 </svg>
 `,
 
@@ -67,39 +67,29 @@ const files = {
 `,
 
   /* ------------------------ أيقونة PWA قابلة للقص ------------------------
-     الخلفية سابحة لحدود اللوحة والعلامة جوّه المنطقة الآمنة (80%)،
+     الخلفية عنبر سابحة لحدود اللوحة والغطاء جوّه المنطقة الآمنة (80%)،
      عشان أي نظام يقصّها دايرة أو مربّع مدوّر من غير ما ياكل من الغطاء. */
   "icon-maskable.svg": `${NOTE}
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192" role="img" aria-label="${BRAND.name} ${BRAND.suffix}">
-  <defs>${stops("bg")}</defs>
-  <rect width="192" height="192" fill="url(#bg)"/>
-  <g transform="translate(96 96) scale(2.4) translate(-24 -24)">${cloche()}</g>
+  <rect width="192" height="192" fill="${COLORS.amber}"/>
+  <g transform="translate(96 96) scale(3) translate(-22 -22)">${cloche()}</g>
 </svg>
 `,
 
-  /* --------------------------- بطاقة المشاركة --------------------------- */
+  /* --------------------------- بطاقة المشاركة ---------------------------
+     ورق كريمي وحبر وبادج — مفيش تدرّجات. الخطوط بتقع على fallback لو
+     السكرابر مش عنده El Messiri. */
   "og.svg": `${NOTE}
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <defs>
-    ${stops("mark")}
-    <radialGradient id="glowA"><stop offset="0%" stop-color="#ff6b35" stop-opacity="0.34"/><stop offset="100%" stop-color="#ff6b35" stop-opacity="0"/></radialGradient>
-    <radialGradient id="glowB"><stop offset="0%" stop-color="#2563eb" stop-opacity="0.26"/><stop offset="100%" stop-color="#2563eb" stop-opacity="0"/></radialGradient>
-    <pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse">
-      <path d="M56 0H0v56" fill="none" stroke="#fff" stroke-opacity="0.03" stroke-width="1"/>
-    </pattern>
-  </defs>
-  <rect width="1200" height="630" fill="#0b1020"/>
-  <rect width="1200" height="630" fill="url(#grid)"/>
-  <ellipse cx="930" cy="120" rx="520" ry="380" fill="url(#glowA)"/>
-  <ellipse cx="180" cy="580" rx="460" ry="340" fill="url(#glowB)"/>
-  <g transform="translate(848 160) scale(3.6)">
-    <path d="${SQUIRCLE}" fill="url(#mark)"/>
-    ${cloche()}
-  </g>
-  <text x="756" y="288" text-anchor="end" font-family="Cairo, 'Geeza Pro', 'SF Arabic', sans-serif" font-size="112" font-weight="800" fill="#fff">${BRAND.name}</text>
-  <text x="756" y="348" text-anchor="end" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="24" font-weight="700" fill="#ff8a4d" letter-spacing="10">${BRAND.latin}</text>
-  <text x="756" y="424" text-anchor="end" font-family="Cairo, 'Geeza Pro', 'SF Arabic', sans-serif" font-size="36" font-weight="600" fill="#a8b3c9">${BRAND.tagline}</text>
-  <text x="756" y="480" text-anchor="end" font-family="Cairo, 'Geeza Pro', 'SF Arabic', sans-serif" font-size="28" font-weight="700" fill="#eaeefa">كاشير · مطبخ · إدارة — في شاشة واحدة</text>
+  <rect width="1200" height="630" fill="${COLORS.paper}"/>
+  <rect x="24" y="24" width="1152" height="582" fill="none" stroke="${COLORS.ink}" stroke-width="3"/>
+  <rect x="34" y="34" width="1132" height="562" fill="none" stroke="${COLORS.ink}" stroke-width="1" stroke-dasharray="6 6"/>
+  <g transform="translate(848 150) scale(4.2)">${badge()}</g>
+  <text x="780" y="280" text-anchor="end" font-family="'El Messiri', Cairo, 'Geeza Pro', 'SF Arabic', sans-serif" font-size="128" font-weight="700" fill="${COLORS.ink}">${BRAND.name}</text>
+  <text x="780" y="342" text-anchor="end" font-family="'IBM Plex Mono', Menlo, monospace" font-size="24" font-weight="600" fill="#8a4e04" letter-spacing="10">${BRAND.latin}</text>
+  <line x1="180" y1="384" x2="780" y2="384" stroke="${COLORS.ink}" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"/>
+  <text x="780" y="440" text-anchor="end" font-family="'IBM Plex Sans Arabic', Cairo, 'Geeza Pro', 'SF Arabic', sans-serif" font-size="36" font-weight="600" fill="${COLORS.ink}">${BRAND.tagline}</text>
+  <text x="780" y="494" text-anchor="end" font-family="'IBM Plex Sans Arabic', Cairo, 'Geeza Pro', 'SF Arabic', sans-serif" font-size="28" font-weight="500" fill="#54463a">كاشير · مطبخ · إدارة — في شاشة واحدة</text>
 </svg>
 `,
 
@@ -118,8 +108,9 @@ const files = {
       display_override: ["fullscreen", "standalone"],
       // شاشة الكاشير تابلت أفقي — التطبيق مصمّم للاتجاه ده
       orientation: "landscape",
-      background_color: "#0b1020",
-      theme_color: "#f4f6fb",
+      background_color: "#1a1410",
+      // لون شريط الترويسة — بيفضل داكن في الوضعين
+      theme_color: "#2b1f17",
       categories: ["business", "food", "productivity"],
       icons: [
         { src: "/logo-mark.svg", sizes: "any", type: "image/svg+xml", purpose: "any" },
@@ -147,15 +138,16 @@ console.log("  ✓ public/logo-mark.svg");
 
 /* ------------------- شعار الإقلاع داخل index.html --------------------
    الشعار ده بيترسم قبل ما أي JS يتحمّل، فلازم يكون HTML خام —
-   ومن غير الحقن ده كان هيبقى النسخة السابعة اليدوية من العلامة. */
+   ومن غير الحقن ده كان هيبقى النسخة السابعة اليدوية من العلامة.
+   على السطح الداكن: حلقة كريمي وسُمك نحاسي (نغمة onDark). */
 const INDEX = join(dirname(fileURLToPath(import.meta.url)), "..", "index.html");
 const START = "<!-- brand:boot:start -->";
 const END = "<!-- brand:boot:end -->";
 
 const boot =
   `<svg width="88" height="88" viewBox="0 0 48 48" fill="none" role="img" aria-label="${BRAND.name} ${BRAND.suffix}">` +
-  `<defs>${stops("boot-g")}</defs>` +
-  `<path d="${SQUIRCLE}" fill="url(#boot-g)"/>` +
+  `<circle cx="${DISK.cx + SHADOW.dx}" cy="${DISK.cy + SHADOW.dy}" r="${DISK.r + DISK.stroke / 2}" fill="${COLORS.brass}"/>` +
+  `<circle cx="${DISK.cx}" cy="${DISK.cy}" r="${DISK.r}" fill="${COLORS.amber}" stroke="${COLORS.cream}" stroke-width="${DISK.stroke}"/>` +
   cloche() +
   `</svg>`;
 

@@ -6,21 +6,13 @@ import { api } from "../api";
 import type { PublicSettings } from "../types";
 import { BRAND, Logo } from "../components/brand";
 import { Button, IconButton, Input } from "../components/ui";
-import {
-  IconAlert,
-  IconChart,
-  IconChef,
-  IconEye,
-  IconEyeOff,
-  IconLock,
-  IconRegister,
-} from "../components/icons";
+import { IconAlert, IconEye, IconEyeOff, IconLock } from "../components/icons";
 
 /** الوعد مقسّم لتلات جُمل — واحدة لكل دور في النظام. */
 const PILLARS = [
-  { icon: <IconRegister size={19} />, text: "الطلب بيتسجّل في ثواني" },
-  { icon: <IconChef size={19} />, text: "المطبخ بيشوفه في نفس اللحظة" },
-  { icon: <IconChart size={19} />, text: "أرقام الوردية قدامك دايماً" },
+  "الطلب بيتسجّل في ثواني",
+  "المطبخ بيشوفه في نفس اللحظة",
+  "أرقام الوردية قدامك دايماً",
 ];
 
 export default function Login() {
@@ -65,95 +57,96 @@ export default function Login() {
 
   return (
     <div className="login brand-canvas">
-      {/* ------------------------- لوحة العلامة -------------------------
-          الاصطلاح العالمي في شاشات دخول نقاط البيع: نص للهوية ونص
-          للنموذج. الهوية بتطمّن الموظف إنه على الجهاز الصح قبل ما
-          يكتب بياناته — وده مهم لما يكون في أكتر من فرع. */}
-      <section className="login__brandpane">
-        <Logo layout="stacked" size="lg" onDark />
+      {/* تذكرة بكعب: الكعب العنبري للهوية، والورقة للنموذج، وبينهم تقطيع.
+          الاصطلاح العالمي في شاشات دخول نقاط البيع: نص للهوية ونص للنموذج —
+          الهوية بتطمّن الموظف إنه على الجهاز الصح قبل ما يكتب بياناته،
+          وده مهم لما يكون في أكتر من فرع. الورقة `theme-light` دايماً:
+          هي الحاجة المضيئة في الشاشة الداكنة، حتى في الوضع الليلي. */}
+      <div className="stub theme-light">
+        <section className="stub__brand">
+          <Logo layout="inline" size="md" />
 
-        <p className="login__promise">{BRAND.promise}</p>
+          <p className="stub__promise">{BRAND.promise}</p>
 
-        <ul className="login__pillars">
-          {PILLARS.map((p) => (
-            <li key={p.text}>
-              <span className="login__pillar-icon" aria-hidden="true">
-                {p.icon}
+          <ol className="stub__list">
+            {PILLARS.map((text, i) => (
+              <li key={text}>
+                <span className="stub__list-no">{String(i + 1).padStart(2, "0")}</span>
+                {text}
+              </li>
+            ))}
+          </ol>
+
+          {station && (
+            <div className="stub__station">
+              <span className="stub__station-name">{station.merchant_name}</span>
+              <span className="stub__station-meta num">
+                {[station.branch, station.station].filter(Boolean).join(" · ")}
               </span>
-              {p.text}
-            </li>
-          ))}
-        </ul>
+              <div className="stub__barcode" aria-hidden="true" />
+            </div>
+          )}
+        </section>
 
-        {station && (
-          <div className="login__station">
-            <span className="login__station-name">{station.merchant_name}</span>
-            <span className="login__station-meta num">
-              {[station.branch, station.station].filter(Boolean).join(" · ")}
-            </span>
+        <form onSubmit={handleSubmit} className="stub__form">
+          <div className="stub__head">
+            <h1 className="stub__title">تسجيل الدخول</h1>
+            <p className="stub__sub">ادخل ببيانات حسابك عشان تفتح الوردية</p>
           </div>
-        )}
-      </section>
 
-      {/* --------------------------- النموذج --------------------------- */}
-      <form onSubmit={handleSubmit} className="login__card on-panel">
-        <div className="login__card-head">
-          <h1 className="login__title">تسجيل الدخول</h1>
-          <p className="login__sub">ادخل ببيانات حسابك عشان تفتح الوردية</p>
-        </div>
-
-        <Input
-          label="البريد الإلكتروني"
-          type="email"
-          dir="ltr"
-          autoComplete="username"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-
-        <div style={{ position: "relative" }}>
           <Input
-            label="كلمة المرور"
-            type={showPassword ? "text" : "password"}
+            label="البريد الإلكتروني"
+            type="email"
             dir="ltr"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
-          {/* الحقل dir=ltr، فالزر لازم يبقى على الجنب المقابل للنص.
-              المقاس أرضية اللمس (44px) — الحقل نفسه 48px فبيقع جوّاه. */}
-          <div style={{ position: "absolute", insetInlineStart: 4, top: 25 }}>
-            <IconButton
-              label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
-              variant="onpanel"
-              icon={showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
-              onClick={() => setShowPassword((v) => !v)}
+
+          <div style={{ position: "relative" }}>
+            <Input
+              label="كلمة المرور"
+              type={showPassword ? "text" : "password"}
+              dir="ltr"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
+            {/* الحقل dir=ltr، فالزر لازم يبقى على الجنب المقابل للنص.
+                المقاس أرضية اللمس (44px) — الحقل نفسه 48px فبيقع جوّاه. */}
+            <div style={{ position: "absolute", insetInlineStart: 2, top: 24 }}>
+              <IconButton
+                label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+                variant="plain"
+                icon={showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+                onClick={() => setShowPassword((v) => !v)}
+              />
+            </div>
           </div>
-        </div>
 
-        {error && (
-          <div role="alert" className="login__alert">
-            <IconAlert size={18} />
-            {error}
+          {error && (
+            <div role="alert" className="stub__alert">
+              <IconAlert size={18} />
+              {error}
+            </div>
+          )}
+
+          <Button type="submit" variant="primary" size="lg" block loading={loading}>
+            {loading ? "جاري الدخول…" : "دخول"}
+          </Button>
+
+          <div className="stub__foot">
+            <span className="u-row" style={{ justifyContent: "center" }}>
+              <IconLock size={13} /> جلسة مؤمّنة — الكوكي httpOnly
+            </span>
+            <span className="brand-version">
+              {BRAND.latin} {BRAND.version}
+            </span>
           </div>
-        )}
-
-        <Button type="submit" variant="primary" size="lg" block loading={loading}>
-          {loading ? "جاري الدخول…" : "دخول"}
-        </Button>
-
-        <div className="login__foot">
-          <span className="u-row" style={{ justifyContent: "center" }}>
-            <IconLock size={13} /> جلسة مؤمّنة — الكوكي httpOnly
-          </span>
-          <span className="brand-version brand-version--ondark">
-            {BRAND.latin} {BRAND.version}
-          </span>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }

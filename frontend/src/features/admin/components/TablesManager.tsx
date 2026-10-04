@@ -3,7 +3,6 @@ import { api } from "../../../api";
 import type { RestaurantTable, TableStatus } from "../../../types";
 import { TABLE_STATUS_LABELS } from "../../../types";
 import {
-  Badge,
   Button,
   Card,
   CardHead,
@@ -23,12 +22,7 @@ import {
   IconTrash,
   IconUndo,
 } from "../../../components/icons";
-
-const TONE: Record<TableStatus, "ready" | "cancelled" | "pending"> = {
-  free: "ready",
-  occupied: "cancelled",
-  reserved: "pending",
-};
+import { TableTile } from "../../pos/components/TableTile";
 
 const STATUSES = Object.keys(TABLE_STATUS_LABELS) as TableStatus[];
 
@@ -196,21 +190,10 @@ export function TablesManager() {
 
           <div className="grid-tiles">
             {active.map((t) => (
-              <div key={t.id} className="tabletile" data-status={t.status}>
-                <div className="u-between">
-                  <span className="tabletile__label">{t.label}</span>
-                  <Badge tone={TONE[t.status]} dot>
-                    {TABLE_STATUS_LABELS[t.status]}
-                  </Badge>
-                </div>
+              <div key={t.id} className="tablecard">
+                <TableTile table={t} />
 
-                {t.active_order_id && (
-                  <span className="u-muted" style={{ fontSize: "var(--fs-xs)", fontWeight: 700 }}>
-                    طلب مفتوح #{t.active_order_id}
-                  </span>
-                )}
-
-                <div className="tabletile__foot">
+                <div className="tablecard__tools">
                   <Select
                     value={t.status}
                     onChange={(e) => setStatus(t.id, e.target.value as TableStatus)}
@@ -252,21 +235,17 @@ export function TablesManager() {
 
           <div className="grid-tiles">
             {archived.map((t) => (
-              <div key={t.id} className="tabletile tabletile--archived" data-status="free">
-                <div className="u-between">
-                  <span className="tabletile__label">{t.label}</span>
-                  <Badge tone="pending">مؤرشفة</Badge>
-                </div>
-                <div className="tabletile__foot">
-                  <Button
-                    size="sm"
-                    variant="soft"
-                    icon={<IconUndo size={16} />}
-                    onClick={() => restore(t)}
-                  >
-                    رجّعها للخدمة
-                  </Button>
-                </div>
+              <div key={t.id} className="tablecard">
+                <TableTile table={t} archived />
+                <Button
+                  size="sm"
+                  variant="soft"
+                  block
+                  icon={<IconUndo size={16} />}
+                  onClick={() => restore(t)}
+                >
+                  رجّعها للخدمة
+                </Button>
               </div>
             ))}
           </div>

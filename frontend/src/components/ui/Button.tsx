@@ -1,7 +1,7 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../lib/cn";
 
-type Variant = "primary" | "dark" | "soft" | "outline" | "ghost" | "danger" | "onpanel";
+type Variant = "primary" | "dark" | "soft" | "outline" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

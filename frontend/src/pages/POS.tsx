@@ -125,11 +125,16 @@ export default function POS() {
     !cart.discountTooBig &&
     (orderType !== "dine_in" || selectedTable !== null);
 
-  const dockItems = useMemo(
+  const tabs = useMemo(
     () => [
-      { id: "new", label: "طلب جديد", icon: <IconGrid />, badge: cart.count || undefined },
-      { id: "open", label: "الطلبات المفتوحة", icon: <IconReceipt />, badge: data.openOrders.length || undefined },
-      { id: "tables", label: "الطاولات", icon: <IconTable /> },
+      { id: "new", label: "طلب جديد", icon: <IconGrid size={20} />, badge: cart.count || undefined },
+      {
+        id: "open",
+        label: "الطلبات المفتوحة",
+        icon: <IconReceipt size={20} />,
+        badge: data.openOrders.length || undefined,
+      },
+      { id: "tables", label: "الطاولات", icon: <IconTable size={20} /> },
     ],
     [cart.count, data.openOrders.length]
   );
@@ -166,9 +171,10 @@ export default function POS() {
       title="نقطة البيع"
       subtitle="إنشاء الطلبات · الدفع · الفواتير"
       sidebar={sidebar}
-      dockItems={dockItems}
-      activeDockId={view}
-      onDockSelect={(id) => setView(id as View)}
+      tabs={tabs}
+      activeTab={view}
+      onTabSelect={(id) => setView(id as View)}
+      fill={view === "new" && !data.error}
     >
       {data.error && (
         <div className="alert alert--danger" role="alert">
@@ -260,7 +266,15 @@ export default function POS() {
           </>
         }
       >
-        {receipt && <Receipt order={receipt.order} paymentMethod={receipt.method} />}
+        {receipt && (
+          <div className="receipt-wrap">
+            <Receipt order={receipt.order} paymentMethod={receipt.method} />
+            {/* الختم على الشاشة بس — برّه الفاتورة، فمبيتطبعش على الورق */}
+            <span className="stamp stamp--paid receipt-wrap__stamp" aria-hidden="true">
+              مدفوع
+            </span>
+          </div>
+        )}
       </Modal>
     </AppShell>
   );

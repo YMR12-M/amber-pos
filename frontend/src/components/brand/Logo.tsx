@@ -1,22 +1,21 @@
-import { useId } from "react";
 import { BRAND, BRAND_FULL } from "./brand";
-import { BAR, DOME, GRADIENT, KNOB, SQUIRCLE } from "./geometry";
+import { BAR, COLORS, DISK, DOME, KNOB, MONO_PATH, SHADOW } from "./geometry";
 
 export { BRAND, BRAND_FULL, MERCHANT_FALLBACK, orderNo } from "./brand";
 
 /* ============================================================================
    الشعار — "عنبر · AMBER POS"
 
-   العلامة: مربّع مائل (squircle) بتدرّج العنبر، جوّاه غطاء تقديم (cloche)
-   أبيض مصمت.
+   العلامة: بادج مينا. قرص عنبر بحلقة حبر وسُمك مصمت مزاح (نفس ظل مفتاح
+   الكاشير في الواجهة)، وجواه غطاء تقديم (cloche) بلون الحبر.
 
-   القبّة **واطية وعريضة** (نصف محور 14.5×9.6) والمقبض صغير وقريب منها —
+   القبّة **واطية وعريضة** (نصف محور 12.5×8.3) والمقبض صغير وقريب منها —
    ودي مش تفصيلة شكلية: القبّة العالية والمقبض الكبير بيتقروا "راس وكتافين"
    يعني أيقونة مستخدم، والواطية العريضة بتتقرا غطاء تقديم فوراً.
    القاعدة أعرض من القبّة عشان الشكل يقف مستقر.
 
-   مفيش أي عنصر أرفع من 2.3px في مساحة 48 — فبيفضل مقروء من 16px
-   (التبويب) لحد 128px (شاشة الدخول) من غير ما يتفتّت.
+   مفيش تدرّجات ولا لمعة ولا شفافية — ألوان مصمتة بس، فبيفضل مقروء من
+   16px (التبويب) لحد 128px (شاشة الدخول)، وبيتطبع أبيض/أسود من غير فقد.
 
    المسارات نفسها جاية من `geometry.ts`، ونفس الملف بيولّد ملفات
    `public/` (favicon · PWA · og) عن طريق `npm run brand` —
@@ -25,12 +24,18 @@ export { BRAND, BRAND_FULL, MERCHANT_FALLBACK, orderNo } from "./brand";
 
 /**
  * نغمة العلامة:
- * - `brand` تدرّج العنبر — الاستخدام الافتراضي على أي سطح ملوّن.
- * - `mono`  لون واحد موروث بـ `currentColor` — للأماكن اللي بتفرض لون
- *           (شريط داكن · نص مضمّن · حالة معطّلة).
- * - `print` أسود مصمت — الفاتورة الحرارية بتطبع أبيض/أسود بس.
+ * - `brand`  على الورق الفاتح: قرص عنبر · حلقة وسُمك حبر.
+ * - `onDark` على الأسطح الداكنة (الترويسة · الدخول): حلقة كريمي وسُمك نحاسي.
+ * - `mono`   لون واحد موروث بـ `currentColor` — للأماكن اللي بتفرض لون.
+ * - `print`  أسود على أبيض — الفاتورة الحرارية بتطبع أبيض/أسود بس.
  */
-export type LogoTone = "brand" | "mono" | "print";
+export type LogoTone = "brand" | "onDark" | "mono" | "print";
+
+const TONES = {
+  brand: { shadow: COLORS.ink, ring: COLORS.ink, disk: COLORS.amber, cloche: COLORS.ink },
+  onDark: { shadow: COLORS.brass, ring: COLORS.cream, disk: COLORS.amber, cloche: COLORS.ink },
+  print: { shadow: "#000", ring: "#000", disk: "#fff", cloche: "#000" },
+} as const;
 
 export function LogoMark({
   size = 40,
@@ -41,11 +46,6 @@ export function LogoMark({
   tone?: LogoTone;
   className?: string;
 }) {
-  // معرّف فريد لكل نسخة — من غيره تدرّجين على نفس الصفحة بيتصادموا
-  const uid = useId().replace(/:/g, "");
-  const plate = tone === "print" ? "#000" : tone === "mono" ? "currentColor" : `url(#bg-${uid})`;
-  const cut = tone === "brand" ? "#fff" : tone === "print" ? "#fff" : "var(--surface, #fff)";
-
   return (
     <svg
       width={size}
@@ -56,29 +56,28 @@ export function LogoMark({
       role="img"
       aria-label={BRAND_FULL}
     >
-      {tone === "brand" && (
-        <defs>
-          <linearGradient id={`bg-${uid}`} x1="0" y1="0" x2="1" y2="1">
-            {GRADIENT.map((s) => (
-              <stop key={s.at} offset={s.at} stopColor={s.color} />
-            ))}
-          </linearGradient>
-          <linearGradient id={`gloss-${uid}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#fff" stopOpacity="0.32" />
-            <stop offset="58%" stopColor="#fff" stopOpacity="0" />
-          </linearGradient>
-        </defs>
+      {tone === "mono" ? (
+        <path d={MONO_PATH} fill="currentColor" fillRule="evenodd" />
+      ) : (
+        <>
+          {/* السُمك المصمت: نفس القرص مزاح (3,3) */}
+          <circle cx={DISK.cx + SHADOW.dx} cy={DISK.cy + SHADOW.dy} r={DISK.r + DISK.stroke / 2} fill={TONES[tone].shadow} />
+          <circle
+            cx={DISK.cx}
+            cy={DISK.cy}
+            r={DISK.r}
+            fill={TONES[tone].disk}
+            stroke={TONES[tone].ring}
+            strokeWidth={DISK.stroke}
+          />
+          {/* غطاء التقديم: مقبض · قبّة · قاعدة — كلها مصمتة، مفيش strokes */}
+          <g fill={TONES[tone].cloche}>
+            <circle cx={KNOB.cx} cy={KNOB.cy} r={KNOB.r} />
+            <path d={DOME} />
+            <rect x={BAR.x} y={BAR.y} width={BAR.w} height={BAR.h} rx={BAR.r} />
+          </g>
+        </>
       )}
-
-      <path d={SQUIRCLE} fill={plate} />
-      {tone === "brand" && <path d={SQUIRCLE} fill={`url(#gloss-${uid})`} />}
-
-      {/* غطاء التقديم: مقبض · قبّة · قاعدة — كلها مصمتة، مفيش strokes */}
-      <g fill={cut}>
-        <circle cx={KNOB.cx} cy={KNOB.cy} r={KNOB.r} />
-        <path d={DOME} />
-        <rect x={BAR.x} y={BAR.y} width={BAR.w} height={BAR.h} rx={BAR.r} />
-      </g>
     </svg>
   );
 }
@@ -89,9 +88,9 @@ export function LogoMark({
  * الاسم المكتوب — نص HTML مش SVG، عشان يورث خط النظام وياخد
  * كل تحسينات الـ hinting على الشاشات العادية.
  *
- * التجميعة سطرين: **عنبر** كبير، وتحته **AMBER POS** صغير ومتباعد.
- * العربي هو الاسم واللاتيني هو التوقيع — فمفيش تكرار لكلمة "POS"
- * في السطرين، والعين بتمسك اسم واحد بس.
+ * التجميعة سطرين: **عنبر** بخط اللافتات، وتحته **AMBER POS** صغير ومتباعد
+ * بخط الإيصال. العربي هو الاسم واللاتيني هو التوقيع — فمفيش تكرار لكلمة
+ * "POS" في السطرين، والعين بتمسك اسم واحد بس.
  *
  * `BRAND.suffix` لسه موجود للسياقات النصية (عنوان الصفحة · الفاتورة ·
  * بيان التطبيق) — بس مش بيتكرر جوّه التجميعة.
@@ -117,7 +116,7 @@ export function Wordmark({
  * التجميعة الرسمية = علامة + اسم. استخدمها بدل ما تركّب الاتنين بإيدك،
  * عشان المسافة بينهم تفضل واحدة في كل الشاشات.
  *
- * `inline`  → التوب بار · الترويسات   ·  `stacked` → الدخول · الانتظار
+ * `inline`  → الترويسة  ·  `stacked` → الدخول · الانتظار
  */
 export function Logo({
   size = "md",
@@ -132,7 +131,7 @@ export function Logo({
   onDark?: boolean;
   className?: string;
 }) {
-  const markSize = { sm: 30, md: 40, lg: 76 }[size];
+  const markSize = { sm: 34, md: 44, lg: 84 }[size];
 
   return (
     <span
@@ -140,7 +139,7 @@ export function Logo({
         className ? ` ${className}` : ""
       }`}
     >
-      <LogoMark size={markSize} />
+      <LogoMark size={markSize} tone={onDark ? "onDark" : "brand"} />
       <span className="logo__text">
         <Wordmark size={size} onDark={onDark} />
         {tagline && <span className="logo__tagline">{BRAND.tagline}</span>}

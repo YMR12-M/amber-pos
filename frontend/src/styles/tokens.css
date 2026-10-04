@@ -1,82 +1,100 @@
 /* ============================================================================
-   AMBER POS — Design Tokens
-   ملف واحد لكل المتغيرات: الألوان، الخطوط، المسافات، الظلال، الحركة.
+   عنبر · AMBER POS — Design Tokens
+   ملف واحد لكل المتغيرات: الورق · الحبر · الأحبار الملوّنة · الخطوط · المسافات.
    عدّل هنا فقط عشان تغيّر هوية النظام كله.
+
+   الفكرة: النظام مطبوع على ورق كافيه — دفتر شيكات، بون مطبخ، دفتر يومية.
+   ورق كريمي دافي · حبر بني غامق · تلات أحبار ملوّنة (عنبر · تركواز · طماطم)
+   بتتطبع فوقه. مفيش تدرّجات ولا توهّج ولا زجاج — حدود صلبة وظل مصمت زي
+   مفتاح الكاشير الحقيقي.
    ========================================================================== */
 
-:root {
-  /* --- Brand ------------------------------------------------------------ */
-  --brand-500: #ff6b35;
-  --brand-400: #ff8a4d;
-  --brand-600: #ef4f16;
-  --brand-700: #c73c0c;
-  --brand-glow: 255 107 53;
-  /* التدرّج اللي بيشيل نص أبيض: كل نقطة فيه ≥ 4.56:1 مع الأبيض (AA) */
-  --brand-gradient: linear-gradient(135deg, #d44300 0%, #c23a02 52%, #ac3001 100%);
-  /* التدرّج الزخرفي (الشعار فقط — مفيش نص فوقه) */
-  --brand-gradient-vivid: linear-gradient(135deg, #ff8a3d 0%, #ff5a1f 52%, #ef4310 100%);
-  --brand-gradient-soft: linear-gradient(135deg, rgb(255 138 61 / 0.14), rgb(239 67 16 / 0.06));
+:root,
+.theme-light {
+  /* --- الورق ------------------------------------------------------------ */
+  --paper: #f3ebda;        /* خلفية التطبيق */
+  --paper-2: #eadfc6;      /* غاطس: حقول · رأس جدول · hover */
+  --paper-3: #dccfae;      /* أغطس: مضغوط · مسار فاضي */
+  --card: #fffcf3;         /* أبيض الورق: شيكات · مفاتيح · نماذج */
+  --card-2: #f9f2e1;       /* ورق مظلّل خفيف: شرائط · صفوف متبادلة */
 
-  --ink-900: #0b1020;
-  --ink-800: #131a2b;
-  --ink-700: #1c2333;
-  --ink-600: #2a3345;
+  /* --- الحبر ------------------------------------------------------------ */
+  --ink: #231a14;          /* النص وحدود المفاتيح */
+  --ink-soft: #54463a;     /* نص ثانوي */
+  --ink-muted: #6f6050;    /* نص ثالث — 4.5:1 على أغمق ورق */
+  --rule: rgb(35 26 20 / 0.14);
+  --rule-strong: rgb(35 26 20 / 0.32);
+  --edge: var(--ink);      /* حد المفتاح وظله المصمت */
+  --field-edge: rgb(35 26 20 / 0.5); /* حد الحقول — أخف من المفتاح وواضح على الورق */
+  --ruled: rgb(23 117 109 / 0.16);   /* سطور الدفتر على الشيك */
+  --margin-red: rgb(194 57 31 / 0.38); /* خط الهامش الأحمر */
 
-  /* --- Semantic (light) ------------------------------------------------- */
-  --app-bg: #f4f6fb;
-  --app-bg-2: #eceff7;
-  --surface: #ffffff;
-  --surface-2: #f7f9fd;
-  --surface-3: #eef2f9;
-  --surface-inset: #e9edf6;
-  --surface-glass: rgb(255 255 255 / 0.72);
+  /* --- السطح الموسوم (الدخول · الانتظار · الإقلاع) — ثابت في الوضعين -------- */
+  --canvas: #1a1410;
 
-  --text: #0e1526;
-  --text-soft: #4a5568;
-  --text-muted: #677285; /* 4.64:1 على أصعب سطح فاتح */
-  --text-invert: #ffffff;
+  /* --- شريط الترويسة (ثابت داكن في الوضعين) ------------------------------ */
+  --bar: #2b1f17;
+  --bar-2: #3b2b20;
+  --bar-text: #f6ecd8;
+  --bar-soft: #cdbb9c;
+  --bar-line: rgb(246 236 216 / 0.16);
 
-  --line: rgb(14 21 38 / 0.09);
-  --line-strong: rgb(14 21 38 / 0.16);
+  /* --- العنبر: لون العلامة وفعل واحد في الشاشة ----------------------------- */
+  --amber: #f2a91b;
+  --amber-hi: #f8bc3e;     /* hover */
+  --amber-lo: #e19a0b;     /* مضغوط */
+  --amber-ink: #8a4e04;    /* عنبر كنص على الورق — 4.5:1 */
+  --amber-wash: #fbe4ab;   /* تظليل: صنف مختار · صف نشط */
+  --on-amber: #231a14;     /* الحبر فوق العنبر — 8:1 */
 
-  --accent: var(--brand-500);
-  --accent-ink: #ffffff;
-  --accent-soft: rgb(255 107 53 / 0.12);
+  /* --- الحالات: لون الطبعة + تظليل + حبر النص + لون النص فوق الطبعة ---------- */
+  --success: #4b7a2b;
+  --success-wash: #dce8c6;
+  --success-ink: #38601f;
+  --on-success: #ffffff;
 
-  /* `--x` = لون العلامة (نقطة · حد · أيقونة)
-     `--x-ink` = لون النص فوق `--x-soft` — محسوب ليحقق 4.5:1 مع خلفيته */
-  --success: #12a150;
-  --success-soft: rgb(18 161 80 / 0.12);
-  --success-ink: #007f2f;
-  --warning: #d18700;
-  --warning-soft: rgb(209 135 0 / 0.14);
-  --warning-ink: #a05a00;
-  --danger: #dc2626;
-  --danger-soft: rgb(220 38 38 / 0.11);
-  --danger-ink: #d3181d;
-  --info: #2563eb;
-  --info-soft: rgb(37 99 235 / 0.12);
-  --info-ink: #2361e8;
-  --accent-ink-on-soft: #ac3001;
+  --warning: #d9a000;
+  --warning-wash: #f8e7a9;
+  --warning-ink: #765000;
+  --on-warning: #231a14;
 
-  /* الأسطح الداكنة (السايدبار والدوك) ثابتة في الوضعين لهوية بصرية واحدة */
-  --panel: #131a2b;
-  --panel-2: #1b2438;
-  --panel-3: #253048;
-  --panel-text: #eef1f8;
-  --panel-text-soft: #9aa5bd;
-  --panel-line: rgb(255 255 255 / 0.09);
+  --danger: #c2391f;
+  --danger-wash: #f6d4c9;
+  --danger-ink: #a02b14;
+  --on-danger: #ffffff;
 
-  --dock-bg: #10162a;
-  --dock-notch: var(--app-bg);
+  --info: #17756d;
+  --info-wash: #cce6e1;
+  --info-ink: #0e5a53;
+  --on-info: #ffffff;
 
-  /* --- Typography ------------------------------------------------------- */
-  --font-sans: "Cairo", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-num: "Inter", "Cairo", ui-sans-serif, system-ui, sans-serif;
+  /* --- ألوان الأقسام: تمانية أحبار — كل قسم ثابت على لونه -------------------
+     بتتحدّد بـ id القسم، فالقسم ياخد نفس اللون على كل جهاز وكل وردية.
+     `--cat-N-on` = لون النص فوق الحبر ده (محسوب ≥ 4.5:1). */
+  --cat-1: #f2a91b; --cat-1-on: #231a14;
+  --cat-2: #1b8078; --cat-2-on: #ffffff;
+  --cat-3: #c8402a; --cat-3-on: #ffffff;
+  --cat-4: #8fb03a; --cat-4-on: #231a14;
+  --cat-5: #8a3f77; --cat-5-on: #ffffff;
+  --cat-6: #3b5ba8; --cat-6-on: #ffffff;
+  --cat-7: #e58ba0; --cat-7-on: #231a14;
+  --cat-8: #8a5a3a; --cat-8-on: #ffffff;
 
-  --fs-2xs: 0.6875rem;  /* 11 */
-  --fs-xs: 0.75rem;     /* 12 */
-  --fs-sm: 0.8125rem;   /* 13 */
+  /* --- الرسوم البيانية: تلات أحبار بترتيب ثابت ------------------------------ */
+  --series-1: #17756d;
+  --series-2: #c47c05;
+  --series-3: #8a3f77;
+
+  /* --- الخطوط ------------------------------------------------------------ */
+  --font-ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, system-ui, -apple-system, sans-serif;
+  --font-display: "El Messiri", "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+  /* الأرقام بخط الإيصال. "IBM Plex Sans Arabic" في السلسلة عشان أي كلمة عربي جوّه
+     عنصر `.num` (مثلاً "5 صنف" أو "فاتورة #000042") ما تقعش على خط احتياطي غريب. */
+  --font-num: "IBM Plex Mono", "IBM Plex Sans Arabic", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --fs-2xs: 0.75rem;    /* 12 */
+  --fs-xs: 0.8125rem;   /* 13 */
+  --fs-sm: 0.875rem;    /* 14 */
   --fs-base: 0.9375rem; /* 15 */
   --fs-md: 1rem;        /* 16 */
   --fs-lg: 1.125rem;    /* 18 */
@@ -85,7 +103,7 @@
   --fs-3xl: 2.25rem;    /* 36 */
   --fs-4xl: 3rem;       /* 48 */
 
-  /* --- Spacing (4px scale) ---------------------------------------------- */
+  /* --- المسافات (سلّم 4px) -------------------------------------------------- */
   --sp-1: 4px;
   --sp-2: 8px;
   --sp-3: 12px;
@@ -96,44 +114,50 @@
   --sp-10: 40px;
   --sp-12: 48px;
 
-  --page-pad: clamp(16px, 2.2vw, 32px);
-  --sidebar-w: 340px;
-  --topbar-h: 68px;
-  --dock-h: 132px;
-  /* أرضية أهداف اللمس: 44px لكل عنصر تفاعلي (WCAG 2.5.5 / Apple HIG)
-     و 48px على مسار الكاشير الأساسي (المنيو · السلة · الدفع · الإرسال) */
+  --page-pad: clamp(14px, 1.8vw, 28px);
+  --topbar-h: 60px;
+  --ticket-w: 392px;
+  --rail-w: 176px;
+  /* أرضية أهداف اللمس: 44px لكل عنصر تفاعلي، و 48px على مسار الكاشير */
   --touch: 48px;
   --touch-min: 44px;
 
-  /* --- Radii ------------------------------------------------------------ */
-  --r-xs: 8px;
-  --r-sm: 12px;
-  --r-md: 16px;
-  --r-lg: 20px;
-  --r-xl: 28px;
-  --r-2xl: 36px;
+  /* --- الزوايا: صغيرة — الورق والمفاتيح مش بيتقوّسوا ------------------------- */
+  --r-xs: 3px;
+  --r-sm: 5px;
+  --r-md: 8px;
+  --r-lg: 12px;
   --r-full: 999px;
 
-  /* --- Elevation (طبقتين: ظل محيط + ظل اتجاهي) -------------------------- */
-  --sh-xs: 0 1px 2px rgb(14 21 38 / 0.05);
-  --sh-sm: 0 1px 2px rgb(14 21 38 / 0.05), 0 2px 8px rgb(14 21 38 / 0.05);
-  --sh-md: 0 2px 4px rgb(14 21 38 / 0.04), 0 8px 20px rgb(14 21 38 / 0.07);
-  --sh-lg: 0 4px 8px rgb(14 21 38 / 0.05), 0 18px 40px rgb(14 21 38 / 0.11);
-  --sh-xl: 0 8px 16px rgb(14 21 38 / 0.06), 0 32px 68px rgb(14 21 38 / 0.16);
-  --sh-brand: 0 6px 16px rgb(var(--brand-glow) / 0.32), 0 2px 4px rgb(var(--brand-glow) / 0.18);
-  --sh-panel: 0 24px 60px rgb(11 16 32 / 0.28);
+  /* --- الحدود -------------------------------------------------------------- */
+  --bw: 1.5px;    /* مفتاح · حقل · شارة */
+  --bw-lg: 2px;   /* شيك · مودال · لوحة */
 
-  --ring: 0 0 0 3px rgb(var(--brand-glow) / 0.35);
+  /* --- العمق: ظل مصمت زي سُمك المفتاح، وظل ورق ناعم جداً للورق على المكتب ----- */
+  --key: 0 3px 0 var(--edge);
+  --key-sm: 0 2px 0 var(--edge);
+  --key-down: 0 0 0 var(--edge);
+  --slip: 0 1px 1px rgb(60 40 20 / 0.1), 0 16px 24px -16px rgb(60 40 20 / 0.5);
+  --float: 0 3px 0 var(--edge), 0 28px 44px -20px rgb(40 24 10 / 0.6);
 
-  /* --- Motion ----------------------------------------------------------- */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
-  --t-fast: 120ms;
-  --t-base: 200ms;
-  --t-slow: 380ms;
+  /* حلقة التركيز: تركواز — واضحة على الورق والعنبر والحبر */
+  --focus: #17756d;
 
-  /* --- Layers ----------------------------------------------------------- */
-  --z-dock: 60;
+  /* ملمس الورق (حبيبات خفيفة — بتتحمّل مرة واحدة كـ data URI) */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .12 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  --grain-opacity: 0.55;
+
+  /* أسنان القصاصة (حافة الورق المقطوعة): حدّها حبر وتعبئتها لون الورقة */
+  --zig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M0 0 7 8 14 0z' fill='%23fffcf3'/%3E%3Cpath d='M0 0 7 8 14 0' fill='none' stroke='%23231a14' stroke-width='1.5'/%3E%3C/svg%3E");
+
+  /* --- الحركة: ميكانيكية — ضغطة مفتاح مش نطّة --------------------------------- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-thud: cubic-bezier(0.3, 1.5, 0.5, 1);
+  --t-fast: 90ms;
+  --t-base: 150ms;
+  --t-slow: 260ms;
+
+  /* --- الطبقات ------------------------------------------------------------- */
   --z-topbar: 40;
   --z-modal: 100;
   --z-toast: 120;
@@ -141,52 +165,77 @@
   color-scheme: light;
 }
 
-/* ============================== الوضع الداكن ============================== */
+/* ============================== الوضع الليلي ==============================
+   سبورة الكافيه: بني إسبريسو غامق وطبشور كريمي. مختار مش مقلوب —
+   كل لون مضبوط لخلفيته. العنبر نفسه ما اتغيّرش: هو ضوء اللمبة.
+   ========================================================================== */
 :root[data-theme="dark"] {
-  --app-bg: #080b14;
-  --app-bg-2: #0c111d;
-  --surface: #121826;
-  --surface-2: #171f30;
-  --surface-3: #1e273b;
-  --surface-inset: #0e1420;
-  --surface-glass: rgb(18 24 38 / 0.74);
+  --paper: #1a1410;
+  --paper-2: #221a14;
+  --paper-3: #2d231a;
+  --card: #261d16;
+  --card-2: #2e241b;
 
-  --text: #eaeefa;
-  --text-soft: #a8b3c9;
-  --text-muted: #7c88a2; /* 4.65:1 على أصعب سطح داكن */
+  --ink: #f4ead5;
+  --ink-soft: #d3c5a9;
+  --ink-muted: #aa9b81;
+  --rule: rgb(244 234 213 / 0.14);
+  --rule-strong: rgb(244 234 213 / 0.3);
+  --edge: rgb(244 234 213 / 0.62);
+  --field-edge: rgb(244 234 213 / 0.45);
+  --ruled: rgb(111 208 197 / 0.1);
+  --margin-red: rgb(255 154 130 / 0.3);
 
-  --line: rgb(255 255 255 / 0.08);
-  --line-strong: rgb(255 255 255 / 0.16);
+  --bar: #0f0a07;
+  --bar-2: #1d140e;
+  --bar-text: #f4ead5;
+  --bar-soft: #bbaa8c;
+  --bar-line: rgb(244 234 213 / 0.14);
 
-  --accent-soft: rgb(255 107 53 / 0.16);
-  --success-soft: rgb(18 161 80 / 0.18);
-  --success-ink: #22a958;
-  --warning-soft: rgb(209 135 0 / 0.2);
-  --warning-ink: #d18700;
-  --danger-soft: rgb(220 38 38 / 0.18);
-  --danger-ink: #fb4a42;
-  --info-soft: rgb(37 99 235 / 0.2);
-  --info-ink: #4a8cff;
-  --accent-ink-on-soft: #ff8a4d;
+  --amber-ink: #f6be48;
+  --amber-wash: #3b2a0d;
 
-  --panel: #0f1523;
-  --panel-2: #161e2f;
-  --panel-3: #202a40;
+  --success: #6fa845;
+  --success-wash: #243219;
+  --success-ink: #9ccb78;
+  --on-success: #14110d;
 
-  --dock-bg: #0d1322;
-  --dock-notch: var(--app-bg);
+  --warning: #e5b01a;
+  --warning-wash: #3a2c0c;
+  --warning-ink: #edc04d;
+  --on-warning: #14110d;
 
-  --sh-xs: 0 1px 2px rgb(0 0 0 / 0.4);
-  --sh-sm: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.32);
-  --sh-md: 0 2px 4px rgb(0 0 0 / 0.35), 0 8px 20px rgb(0 0 0 / 0.4);
-  --sh-lg: 0 4px 8px rgb(0 0 0 / 0.4), 0 18px 40px rgb(0 0 0 / 0.5);
-  --sh-xl: 0 8px 16px rgb(0 0 0 / 0.45), 0 32px 68px rgb(0 0 0 / 0.6);
-  --sh-panel: 0 24px 60px rgb(0 0 0 / 0.6);
+  --danger: #e2583f;
+  --danger-wash: #3c1c14;
+  --danger-ink: #ff9a82;
+  --on-danger: #14110d;
+
+  --info: #2fa79c;
+  --info-wash: #12332f;
+  --info-ink: #6fd0c5;
+  --on-info: #14110d;
+
+  --series-1: #3fb5aa;
+  --series-2: #f2a91b;
+  --series-3: #c987b6;
+
+  --focus: #6fd0c5;
+
+  --key: 0 3px 0 #070402;
+  --key-sm: 0 2px 0 #070402;
+  --key-down: 0 0 0 #070402;
+  --slip: 0 1px 1px rgb(0 0 0 / 0.4), 0 16px 24px -16px rgb(0 0 0 / 0.8);
+  --float: 0 3px 0 #070402, 0 28px 44px -20px rgb(0 0 0 / 0.9);
+
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .96 0 0 0 0 .9 0 0 0 0 .78 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  --grain-opacity: 0.1;
+
+  --zig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M0 0 7 8 14 0z' fill='%23261d16'/%3E%3Cpath d='M0 0 7 8 14 0' fill='none' stroke='%23f4ead5' stroke-opacity='.62' stroke-width='1.5'/%3E%3C/svg%3E");
 
   color-scheme: dark;
 }
 
-/* شاشة المطبخ: تباين أعلى وخط أكبر لأنها بتتقرا من بعيد */
+/* شاشة المطبخ: خط أكبر لأنها بتتقرا من بعيد وبإيد مشغولة */
 :root[data-density="kitchen"] {
   --fs-base: 1rem;
   --fs-md: 1.0625rem;

@@ -162,7 +162,7 @@ export function StaffManager() {
                     <tr key={u.id}>
                       <td>
                         <div className="u-row">
-                          <span className="userchip__avatar">{initials(u.name)}</span>
+                          <span className="userchip__avatar userchip__avatar--paper">{initials(u.name)}</span>
                           <span style={{ fontWeight: 700 }}>{u.name}</span>
                         </div>
                       </td>

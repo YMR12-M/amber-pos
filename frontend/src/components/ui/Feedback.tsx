@@ -45,11 +45,19 @@ export function Skeleton({
 }
 
 /** شبكة كروت وهمية أثناء التحميل — بتمنع "قفزة" المحتوى. */
-export function SkeletonGrid({ count = 8, height = 124 }: { count?: number; height?: number }) {
+export function SkeletonGrid({
+  count = 8,
+  height = 124,
+  className = "grid-menu",
+}: {
+  count?: number;
+  height?: number;
+  className?: string;
+}) {
   return (
-    <div className="grid-menu" aria-busy="true">
+    <div className={className} aria-busy="true">
       {Array.from({ length: count }, (_, i) => (
-        <Skeleton key={i} h={height} r={16} />
+        <Skeleton key={i} h={height} r={5} />
       ))}
     </div>
   );
