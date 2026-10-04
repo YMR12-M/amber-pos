@@ -108,10 +108,10 @@ export function SalesChart({ daily }: { daily: SalesDay[] }) {
         onMouseLeave={() => setHover(null)}
       >
         <defs>
-          <linearGradient id="viz-area" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--viz-trend)" stopOpacity="0.26" />
-            <stop offset="100%" stopColor="var(--viz-trend)" stopOpacity="0.02" />
-          </linearGradient>
+          {/* تظليل بشرائط مائلة — زي الحفر على الورق، مش تدرّج */}
+          <pattern id="viz-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="7" stroke="var(--viz-trend)" strokeWidth="2" strokeOpacity="0.4" />
+          </pattern>
         </defs>
 
         {/* شبكة خافتة + محور القيم */}
@@ -124,7 +124,7 @@ export function SalesChart({ daily }: { daily: SalesDay[] }) {
           </g>
         ))}
 
-        <path d={areaPath} fill="url(#viz-area)" />
+        <path d={areaPath} fill="url(#viz-hatch)" />
         <path className="viz__line" d={linePath} />
 
         {/* علامة أعلى يوم — تسمية مباشرة بدل رقم على كل نقطة */}

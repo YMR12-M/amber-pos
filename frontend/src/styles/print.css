@@ -4,17 +4,21 @@
    الطابعة الحرارية بتعرف أسود وأبيض بس — مفيش تدرّجات ولا رمادي حقيقي
    (بيتحوّل لنقط متفرّقة). فكل حاجة هنا إما #000 أو #fff، والفواصل
    بتتعمل بخطوط متقطّعة مش بظلال.
+
+   على الشاشة (معاينة جوّه المودال) الفاتورة ورقة بيضا ثابتة في الوضعين —
+   هي ورقة حرارية حقيقية، مش جزء من ثيم الواجهة.
    ========================================================================== */
 
 .receipt {
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-size: 13px;
   line-height: 1.7;
   color: #000;
   background: #fff;
   padding: var(--sp-4);
-  border-radius: var(--r-sm);
-  border: 1px dashed var(--line-strong);
+  border: 1px dashed #000;
+  border-radius: var(--r-xs);
+  box-shadow: 3px 4px 0 var(--rule-strong);
 }
 
 /* ------------------------------- المنشأة --------------------------------- */
@@ -22,9 +26,9 @@
 .receipt__logo { display: flex; justify-content: center; margin-bottom: 6px; }
 
 .receipt__merchant {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
   line-height: 1.3;
 }
 .receipt__branch { font-size: 12px; font-weight: 700; }
@@ -32,7 +36,7 @@
 .receipt__tax {
   font-family: var(--font-num);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   margin-top: 4px;
 }
 
@@ -40,9 +44,8 @@
 .receipt__no {
   font-family: var(--font-num);
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
   text-align: center;
-  letter-spacing: 0.02em;
 }
 
 /* ------------------------------- البيانات -------------------------------- */
@@ -76,7 +79,7 @@
 .receipt__table th {
   text-align: start;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 700;
   padding: 4px 0;
   border-bottom: 1px solid #000;
 }
@@ -97,7 +100,7 @@
   display: block;
   font-family: var(--font-num);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   opacity: 0.78;
 }
 .receipt__item-note {
@@ -122,11 +125,12 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-size: 18px;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
   padding-top: 8px;
   margin-top: 6px;
-  border-top: 2px solid #000;
+  border-top: 5px double #000;
 }
 
 /* ------------------------------- التذييل --------------------------------- */
@@ -135,8 +139,7 @@
 .receipt__ref {
   font-family: var(--font-num);
   font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-weight: 500;
   margin-top: 4px;
   opacity: 0.8;
 }
@@ -151,6 +154,18 @@
 }
 
 .receipt .num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+/* ختم «مدفوع» فوق معاينة الفاتورة — في الركن الفاضي جنب الشعار */
+.receipt-wrap { position: relative; }
+.receipt-wrap__stamp {
+  position: absolute;
+  z-index: 2;
+  inset-inline-end: var(--sp-3);
+  top: var(--sp-5);
+  --tilt: -12deg;
+  font-size: var(--fs-2xl);
+  padding-inline: var(--sp-4);
+}
 
 /* ---------------------------- وقت الطباعة فقط ---------------------------- */
 @media print {
@@ -169,6 +184,10 @@
   /* نخفي كل حاجة ماعدا الفاتورة */
   body * { visibility: hidden; }
   .receipt, .receipt * { visibility: visible; }
+
+  /* غلاف المعاينة (بتاع الختم) مش جزء من الورقة — لازم يبقى static عشان
+     الفاتورة تتثبّت في أول الصفحة مش في مكانها جوّه المودال. */
+  .receipt-wrap { position: static; }
 
   .receipt {
     position: absolute;

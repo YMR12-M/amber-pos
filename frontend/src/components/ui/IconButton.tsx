@@ -4,7 +4,7 @@ import { cn } from "../../lib/cn";
 export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** إجباري — الزر أيقونة بس، فمحتاج اسم يقراه القارئ الصوتي. */
   label: string;
-  variant?: "default" | "plain" | "onpanel";
+  variant?: "default" | "plain" | "onbar";
   icon: ReactNode;
 }
 

@@ -1,6 +1,5 @@
 <!-- مولّد آلياً بـ `npm run brand` من src/components/brand/geometry.ts — ما تعدّلش هنا. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192" role="img" aria-label="عنبر POS">
-  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff8a3d"/><stop offset="52%" stop-color="#ff5a1f"/><stop offset="100%" stop-color="#ef4310"/></linearGradient></defs>
-  <rect width="192" height="192" fill="url(#bg)"/>
-  <g transform="translate(96 96) scale(2.4) translate(-24 -24)"><g fill="#fff"><circle cx="24" cy="14.8" r="2.3"/><path d="M9.5 28a14.5 9.6 0 0 1 29 0Z"/><rect x="7" y="30.2" width="34" height="4.4" rx="2.2"/></g></g>
+  <rect width="192" height="192" fill="#f2a91b"/>
+  <g transform="translate(96 96) scale(3) translate(-22 -22)"><g fill="#231a14"><circle cx="22" cy="14.5" r="2"/><path d="M9.5 25.9a12.5 8.3 0 0 1 25 0Z"/><rect x="7.4" y="27.8" width="29.2" height="3.8" rx="1.9"/></g></g>
 </svg>

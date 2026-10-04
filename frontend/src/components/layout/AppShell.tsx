@@ -1,55 +1,57 @@
 import type { ReactNode } from "react";
 import { TopBar } from "./TopBar";
-import { Dock, type DockItem } from "./Dock";
+import type { TabItem } from "./ModeTabs";
 
 /**
- * هيكل الصفحة الموحّد لكل الشاشات:
+ * هيكل الصفحة الموحّد لكل الشاشات — الهيكل التقليدي لنقطة البيع:
  *
- *   ┌──────────────── TopBar (بعرض الشاشة) ────────────────┐
- *   │ Sidebar (يمين) │           المحتوى                   │
- *   │                │        … + Dock عائم تحت            │
- *   └──────────────────────────────────────────────────────┘
+ *   ┌──────── الترويسة: العلامة · التبويبات · الساعة · المستخدم ────────┐
+ *   │ لوحة الشيك (يمين) │                 المحتوى                       │
+ *   └─────────────────────────────────────────────────────────────────┘
  *
- * السايدبار أول عنصر في الـ DOM عشان يقع على اليمين في RTL،
- * والدوك جوه عمود المحتوى عشان يتوسّطه هو مش الشاشة كلها.
+ * لوحة الشيك أول عنصر في الـ DOM عشان تقع على اليمين في RTL.
+ * `fill` بيخلّي المحتوى يملا الارتفاع من غير سكرول للصفحة — شاشة
+ * الكاشير بتسكرول الأقسام والمنيو كلٌّ لوحده.
  */
 export function AppShell({
   title,
   subtitle,
   actions,
   sidebar,
-  dockItems,
-  activeDockId,
-  onDockSelect,
+  tabs,
+  activeTab,
+  onTabSelect,
+  fill,
   children,
 }: {
   title: string;
   subtitle?: string;
   actions?: ReactNode;
   sidebar?: ReactNode;
-  dockItems?: DockItem[];
-  activeDockId?: string;
-  onDockSelect?: (id: string) => void;
+  tabs?: TabItem[];
+  activeTab?: string;
+  onTabSelect?: (id: string) => void;
+  fill?: boolean;
   children: ReactNode;
 }) {
   return (
     <div className="shell">
-      <TopBar title={title} subtitle={subtitle} actions={actions} />
+      <TopBar
+        title={title}
+        subtitle={subtitle}
+        actions={actions}
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabSelect={onTabSelect}
+      />
 
       <div className="shell__content">
         {sidebar}
 
-        <div className="shell__main">
-          {/* معلم <main> — نقطة القفز الأساسية لقارئ الشاشة.
-              الدوك بره عشان التنقّل مايبقاش جوه المحتوى الرئيسي. */}
-          <main className="shell__body" id="main">
-            {children}
-          </main>
-
-          {dockItems && dockItems.length > 0 && activeDockId && onDockSelect && (
-            <Dock items={dockItems} activeId={activeDockId} onSelect={onDockSelect} />
-          )}
-        </div>
+        {/* معلم <main> — نقطة القفز الأساسية لقارئ الشاشة. */}
+        <main className={fill ? "shell__body shell__body--fill" : "shell__body"} id="main">
+          {children}
+        </main>
       </div>
     </div>
   );

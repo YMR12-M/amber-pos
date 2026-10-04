@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppShell } from "../components/layout";
-import { Button } from "../components/ui";
+import { IconButton } from "../components/ui";
 import {
   IconChart,
   IconChef,
@@ -47,13 +47,13 @@ export default function Admin() {
     }
   }, [needsSetup]);
 
-  const dockItems = useMemo(
+  const tabs = useMemo(
     () => [
-      { id: "reports", label: "التقارير", icon: <IconChart /> },
-      { id: "menu", label: "المنيو", icon: <IconGrid /> },
-      { id: "tables", label: "الطاولات", icon: <IconTable /> },
-      { id: "staff", label: "الموظفين", icon: <IconUsers /> },
-      { id: "settings", label: "الإعدادات", icon: <IconSettings /> },
+      { id: "reports", label: "التقارير", icon: <IconChart size={20} /> },
+      { id: "menu", label: "المنيو", icon: <IconGrid size={20} /> },
+      { id: "tables", label: "الطاولات", icon: <IconTable size={20} /> },
+      { id: "staff", label: "الموظفين", icon: <IconUsers size={20} /> },
+      { id: "settings", label: "الإعدادات", icon: <IconSettings size={20} /> },
     ],
     []
   );
@@ -64,27 +64,24 @@ export default function Admin() {
       subtitle={SUBTITLES[tab]}
       actions={
         <>
-          <Button
-            size="sm"
-            variant="soft"
-            icon={<IconRegister size={17} />}
+          {/* اختصارات لشاشتين تانيين — أيقونات بس عشان التبويبات الخمسة ياخدوا المكان */}
+          <IconButton
+            label="نقطة البيع"
+            variant="onbar"
+            icon={<IconRegister size={20} />}
             onClick={() => navigate("/pos")}
-          >
-            نقطة البيع
-          </Button>
-          <Button
-            size="sm"
-            variant="soft"
-            icon={<IconChef size={17} />}
+          />
+          <IconButton
+            label="شاشة المطبخ"
+            variant="onbar"
+            icon={<IconChef size={20} />}
             onClick={() => navigate("/kitchen")}
-          >
-            المطبخ
-          </Button>
+          />
         </>
       }
-      dockItems={dockItems}
-      activeDockId={tab}
-      onDockSelect={(id) => setTab(id as Tab)}
+      tabs={tabs}
+      activeTab={tab}
+      onTabSelect={(id) => setTab(id as Tab)}
     >
       {tab === "reports" && <SalesReport />}
       {tab === "menu" && <MenuManager />}

@@ -26,7 +26,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 
     return (
       <div className="fallback brand-canvas">
-        <div className="card card--pad fallback__card">
+        <div className="card card--pad fallback__card theme-light">
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
             <Logo layout="stacked" size="sm" />
           </div>
@@ -40,7 +40,7 @@ export default class ErrorBoundary extends Component<Props, State> {
           </div>
 
           <h1 style={{ fontSize: "var(--fs-xl)", marginBottom: 8 }}>حصلت مشكلة غير متوقعة</h1>
-          <p style={{ color: "var(--text-soft)", fontSize: "var(--fs-sm)", marginBottom: 20 }}>
+          <p style={{ color: "var(--ink-soft)", fontSize: "var(--fs-sm)", marginBottom: 20 }}>
             {this.state.error.message || "خطأ غير معروف"}
           </p>
 

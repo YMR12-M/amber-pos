@@ -1,10 +1,10 @@
 /* ============================================================================
-   AMBER POS — Layout: App Shell · TopBar · Sidebar · Dock
+   عنبر · AMBER POS — Layout: الشِل · الترويسة · التبويبات · لوحة الشيك
    ========================================================================== */
 
 /* ------------------------------- App Shell -------------------------------
-   عمود واحد: TopBar بعرض الشاشة كامل، وتحته صف فيه السايدبار (يمين — RTL)
-   والمحتوى. الدوك جوه عمود المحتوى عشان يفضل في نصّه مش في نص الشاشة.
+   الهيكل التقليدي لأي نقطة بيع: شريط علوي بالتبويبات، وتحته لوحة الشيك
+   (يمين — RTL) والمحتوى. مفيش حاجة عايمة ولا شريط تنقّل سفلي.
    ------------------------------------------------------------------------ */
 .shell {
   position: relative;
@@ -21,22 +21,12 @@
   display: flex;
 }
 
-.shell__main {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
 .shell__body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: var(--page-pad);
-  padding-bottom: var(--dock-h);
-  scroll-behavior: smooth;
 }
 
 .shell__body > * {
@@ -44,42 +34,73 @@
   margin-inline: auto;
 }
 
-/* -------------------------------- TopBar --------------------------------- */
+/* شاشة الكاشير: الأقسام والمنيو بيسكرولوا لوحدهم، والصفحة نفسها ثابتة */
+.shell__body--fill {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+.shell__body--fill > * {
+  max-width: none;
+  margin: 0;
+}
+.shell__body--fill > .pos {
+  flex: 1;
+  min-height: 0;
+}
+.shell__body--fill > .alert {
+  margin: var(--sp-3) var(--page-pad) 0;
+}
+
+/* -------------------------------- Topbar ---------------------------------
+   شريط إسبريسو داكن بشريط عنبر تحته. التبويب النشط بيطلع زي تبويب الملف
+   الورقي: بيغطّي الشريط ويكمل في الورق اللي تحته.
+   ------------------------------------------------------------------------ */
 .topbar {
   position: relative;
   z-index: var(--z-topbar);
   flex-shrink: 0;
   display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  height: var(--topbar-h);
+  align-items: stretch;
+  gap: var(--sp-4);
+  min-height: var(--topbar-h);
   padding-inline: var(--page-pad);
-  background: var(--surface-glass);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid var(--line);
+  background: var(--bar);
+  color: var(--bar-text);
+  box-shadow: inset 0 -3px 0 var(--amber);
 }
+
+.topbar__start,
+.topbar__end {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--sp-3);
+  padding-bottom: 3px;
+}
+.topbar__end { margin-inline-start: auto; }
 
 .topbar__titles {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  line-height: 1.25;
+  line-height: 1.2;
+  padding-inline-start: var(--sp-3);
+  border-inline-start: 1px solid var(--bar-line);
 }
-
 .topbar__title {
-  font-size: var(--fs-xl);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--bar-text);
+  white-space: nowrap;
 }
-
 .topbar__sub {
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  color: var(--text-muted);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  color: var(--bar-soft);
+  white-space: nowrap;
 }
-
-.topbar__spacer { flex: 1; }
 
 .topbar__actions {
   display: flex;
@@ -87,366 +108,348 @@
   gap: var(--sp-2);
 }
 
-.topbar__divider {
-  width: 1px;
-  height: 26px;
-  background: var(--line);
+/* زر العلامة = رجوع للشاشة الرئيسية */
+.brandbtn {
+  display: flex;
+  align-items: center;
+  min-height: var(--touch-min);
+  padding: 4px var(--sp-2);
+  margin-inline-start: calc(-1 * var(--sp-2));
+  border-radius: var(--r-sm);
+  color: var(--bar-text);
+  transition: background var(--t-fast);
+}
+.brandbtn:hover { background: var(--bar-2); }
+.brandbtn:active { transform: translateY(1px); }
+
+/* ------------------------------ التبويبات -------------------------------- */
+.modetabs {
+  display: flex;
+  align-items: flex-end;
+  align-self: flex-end;
+  gap: 3px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.modetabs::-webkit-scrollbar { display: none; }
+
+.modetab {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 48px;
+  padding-inline: var(--sp-5);
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  background: transparent;
+  color: var(--bar-soft);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.modetab:hover:not(.is-active) { background: var(--bar-2); color: var(--bar-text); }
+.modetab:active:not(.is-active) { background: var(--bar-2); }
+
+.modetab.is-active {
+  background: var(--paper);
+  color: var(--ink);
+  /* كاب عنبر على راس التبويب */
+  box-shadow: inset 0 4px 0 var(--amber);
 }
 
-/* بطاقة المستخدم */
+/* 4 تبويبات أو أكتر (المطبخ · الإدارة): مسافات أضيق عشان الصف يتسع جنب الساعة والمستخدم */
+.modetabs--dense .modetab { padding-inline: var(--sp-4); }
+
+.modetab__icon { display: grid; place-items: center; }
+
+/* عدّاد صغير على التبويب (زي عدد الطلبات المفتوحة) */
+.modetab__badge {
+  min-width: 22px;
+  height: 22px;
+  padding-inline: 6px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-xs);
+  background: var(--amber);
+  color: var(--on-amber);
+  font-family: var(--font-num);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+}
+.modetab.is-active .modetab__badge { background: var(--ink); color: var(--paper); }
+
+/* ----------------------------- عناصر الترويسة ---------------------------- */
+/* هوية الجهاز — الفرع والمحطة */
+.station {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.25;
+  padding-inline-end: var(--sp-3);
+  border-inline-end: 1px solid var(--bar-line);
+}
+.station__branch {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--bar-soft);
+  white-space: nowrap;
+}
+.station__id {
+  font-family: var(--font-num);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--amber);
+}
+
+/* الساعة */
+.clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.clock__time {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--bar-text);
+}
+.clock__date { font-size: var(--fs-2xs); font-weight: 500; color: var(--bar-soft); }
+
+/* بطاقة المستخدم: لوحة اسم زي اللي على الجاكيت */
 .userchip {
   display: flex;
   align-items: center;
   gap: var(--sp-2);
-  padding: 5px;
+  padding: 4px;
   padding-inline-end: var(--sp-3);
-  border-radius: var(--r-full);
-  background: var(--surface-3);
-  border: 1px solid var(--line);
-  transition: background var(--t-fast), border-color var(--t-fast);
+  border: 1px solid var(--bar-line);
+  border-radius: var(--r-sm);
+  background: var(--bar-2);
 }
-.userchip:hover { border-color: var(--line-strong); }
-
 .userchip__avatar {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  min-width: 36px;
+  height: 36px;
+  padding-inline: 3px;
   flex-shrink: 0;
-  border-radius: var(--r-full);
-  background: var(--brand-gradient);
-  color: #fff;
-  font-size: var(--fs-sm);
-  font-weight: 800;
-  box-shadow: var(--sh-brand);
+  border-radius: var(--r-xs);
+  background: var(--amber);
+  color: var(--on-amber);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 700;
 }
-
 .userchip__meta {
   display: flex;
   flex-direction: column;
   line-height: 1.2;
   text-align: start;
 }
-.userchip__name { font-size: var(--fs-sm); font-weight: 700; }
-.userchip__role { font-size: var(--fs-2xs); font-weight: 600; color: var(--text-muted); }
+.userchip__name { font-size: var(--fs-sm); font-weight: 600; color: var(--bar-text); white-space: nowrap; }
+.userchip__role { font-size: var(--fs-2xs); font-weight: 500; color: var(--bar-soft); white-space: nowrap; }
 
-/* هوية الجهاز — الفرع والمحطة.
-   مقاس صغير مقصود: معلومة تأكيد، مش معلومة بتتقرا كل شوية. */
-.station {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  line-height: 1.2;
-  padding-inline-end: var(--sp-3);
-  border-inline-end: 1px solid var(--line);
-}
-.station__branch {
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  color: var(--text-soft);
-  white-space: nowrap;
-}
-.station__id {
-  font-family: var(--font-num);
-  font-size: var(--fs-2xs);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--accent-ink-on-soft);
+/* الأفاتار برّه الترويسة (جدول الموظفين) */
+.userchip__avatar--paper {
+  border: var(--bw) solid var(--edge);
 }
 
-/* الساعة الحية */
-.clock {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  line-height: 1.15;
-}
-.clock__time {
-  font-family: var(--font-num);
-  font-variant-numeric: tabular-nums;
-  font-size: var(--fs-md);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.clock__date { font-size: var(--fs-2xs); font-weight: 600; color: var(--text-muted); }
-
-/* -------------------------------- Sidebar -------------------------------- */
-.sidebar {
+/* ------------------------------ لوحة الشيك ------------------------------
+   اللوحة الجانبية = شيك على بلوك الكاشير: ورق فاتح، سطور دفتر خفيفة،
+   هامش أحمر، وفواصل متقطّعة بدل الظلال.
+   ------------------------------------------------------------------------ */
+.ticket {
   position: relative;
-  width: var(--sidebar-w);
+  z-index: 2;
+  width: var(--ticket-w);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  background: var(--panel);
-  color: var(--panel-text);
-  box-shadow: var(--sh-panel);
-  z-index: 2;
+  background: var(--card);
+  border-inline-end: var(--bw-lg) solid var(--edge);
+  box-shadow: var(--slip);
 }
 
-/* لمعة علوية خفيفة تفصل السايدبار عن المحتوى */
-.sidebar::after {
+/* شريط التثبيت العلوي: ورقة الشيك متدبّسة في البلوك */
+.ticket::before {
   content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+  flex-shrink: 0;
+  height: 10px;
   background:
-    radial-gradient(120% 40% at 50% 0%, rgb(255 255 255 / 0.06), transparent 70%),
-    radial-gradient(90% 45% at 50% 100%, rgb(var(--brand-glow) / 0.1), transparent 70%);
+    radial-gradient(circle at 18px 5px, var(--paper-3) 0 2.5px, transparent 3px) 0 0 / 100% 100% no-repeat,
+    radial-gradient(circle at calc(100% - 18px) 5px, var(--paper-3) 0 2.5px, transparent 3px) 0 0 / 100% 100% no-repeat,
+    var(--card-2);
+  border-bottom: 1px solid var(--rule-strong);
 }
 
-.sidebar > * { position: relative; z-index: 1; }
-
-.sidebar__head {
-  padding: var(--sp-5) var(--sp-5) var(--sp-4);
-  border-bottom: 1px solid var(--panel-line);
+.ticket__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5) var(--sp-3);
+  border-bottom: var(--bw) dashed var(--rule-strong);
 }
 
-.sidebar__title {
-  font-size: var(--fs-lg);
-  font-weight: 800;
-  letter-spacing: -0.01em;
+.ticket__title {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
-.sidebar__hint {
+.ticket__hint {
   font-size: var(--fs-xs);
-  font-weight: 600;
-  color: var(--panel-text-soft);
+  font-weight: 500;
+  color: var(--ink-muted);
 }
 
-.sidebar__scroll {
+.ticket__body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: var(--sp-4) var(--sp-5);
+  padding: var(--sp-3) var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  /* هامش أحمر + سطور دفتر */
+  background-image:
+    linear-gradient(to left, transparent calc(var(--sp-5) - 2px), var(--margin-red) calc(var(--sp-5) - 2px), var(--margin-red) calc(var(--sp-5) - 1px), transparent calc(var(--sp-5) - 1px)),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 27px, var(--ruled) 27px, var(--ruled) 28px);
+}
+
+.ticket__foot {
+  flex-shrink: 0;
+  padding: var(--sp-3) var(--sp-5) var(--sp-4);
+  border-top: 5px double var(--edge);
+  background: var(--card);
   display: flex;
   flex-direction: column;
   gap: var(--sp-2);
 }
 
-.sidebar__foot {
-  padding: var(--sp-4) var(--sp-5) var(--sp-5);
-  border-top: 1px solid var(--panel-line);
-  background: linear-gradient(to top, rgb(0 0 0 / 0.24), transparent);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-}
-
-/* صف مجاميع داخل السايدبار */
-.srow {
+/* صف حساب بخط منقّط: بند ........ قيمة */
+.trow {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
+  gap: var(--sp-2);
   font-size: var(--fs-sm);
   font-weight: 600;
-  color: var(--panel-text-soft);
+  color: var(--ink-soft);
 }
-.srow--total {
-  padding-top: var(--sp-3);
-  margin-top: var(--sp-1);
-  border-top: 1px dashed var(--panel-line);
-  color: var(--panel-text);
+.trow__dots {
+  flex: 1;
+  min-width: 12px;
+  border-bottom: 2px dotted var(--rule-strong);
+  transform: translateY(-3px);
 }
-.srow__value { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
-
-.total-amount {
+.trow__value {
   font-family: var(--font-num);
-  font-size: var(--fs-3xl);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-  background: linear-gradient(180deg, #fff, #ffd9c6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* ---------------------------------- Dock ---------------------------------
-   شريط تنقل عائم: العنصر النشط بيطلع لفوق جوه دايرة بيضة
-   والدوك بيتقص حواليها (نفس التصميم المرجعي).
-   ------------------------------------------------------------------------ */
-.dock-wrap {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  z-index: var(--z-dock);
-  display: flex;
-  justify-content: center;
-  padding: 46px var(--page-pad) var(--sp-5);
-  pointer-events: none;
-  background: linear-gradient(
-    to top,
-    var(--app-bg) 0%,
-    var(--app-bg) 58%,
-    rgb(0 0 0 / 0) 100%
-  );
-}
-
-.dock {
-  position: relative;
-  pointer-events: auto;
-  padding: var(--sp-2);
-  border-radius: var(--r-xl);
-  background: var(--dock-bg);
-  box-shadow:
-    0 2px 6px rgb(8 11 20 / 0.28),
-    0 18px 44px rgb(8 11 20 / 0.34),
-    inset 0 1px 0 rgb(255 255 255 / 0.07);
-  max-width: 100%;
-  /* لازم visible عشان الدايرة المرفوعة ماتتقصّش */
-  overflow: visible;
-}
-
-/* الصف القابل للتمرير — منفصل عن .dock عشان الدايرة تفضل ظاهرة */
-.dock__items {
-  display: flex;
-  align-items: stretch;
-  gap: var(--sp-1);
-  max-width: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.dock__items::-webkit-scrollbar { display: none; }
-
-/* الدايرة المرفوعة — بتتحرك للعنصر النشط */
-.dock__lift {
-  position: absolute;
-  top: -22px;
-  left: 0;
-  width: 62px;
-  height: 62px;
-  border-radius: var(--r-full);
-  background: var(--surface);
-  color: var(--text);
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-  /* الحلقة دي هي اللي بتعمل "القص" في الدوك */
-  box-shadow:
-    0 0 0 9px var(--dock-notch),
-    0 10px 22px rgb(8 11 20 / 0.32);
-  transform: translateX(var(--lift-x, 0px));
-  transition:
-    transform var(--t-slow) var(--ease-spring),
-    opacity var(--t-base) var(--ease-out);
-  will-change: transform;
-}
-.dock__lift[data-ready="false"] { opacity: 0; }
-
-.dock__lift-icon {
-  display: grid;
-  place-items: center;
-  animation: pop-in var(--t-base) var(--ease-spring);
-}
-
-.dock__item {
-  position: relative;
-  flex: 0 0 auto;
-  min-width: 78px;
-  min-height: 62px;
-  padding: var(--sp-2) var(--sp-3);
-  border-radius: var(--r-lg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  color: rgb(255 255 255 / 0.66);
-  transition: color var(--t-fast), background var(--t-fast);
-}
-
-.dock__item:hover:not(.is-active) {
-  color: #fff;
-  background: rgb(255 255 255 / 0.07);
-}
-
-.dock__item.is-active {
-  color: #fff;
-  min-width: 92px;
-  justify-content: flex-end;
-}
-
-/* أيقونة العنصر النشط بتختفي من الشريط لأنها اتنقلت للدايرة */
-.dock__item.is-active .dock__icon { opacity: 0; }
-
-.dock__icon {
-  display: grid;
-  place-items: center;
-  height: 24px;
-  transition: opacity var(--t-fast), transform var(--t-base) var(--ease-spring);
-}
-.dock__item:active .dock__icon { transform: scale(0.88); }
-
-.dock__label {
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--ink);
   white-space: nowrap;
-  max-width: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-width var(--t-slow) var(--ease-out), opacity var(--t-base) var(--ease-out);
 }
-.dock__item.is-active .dock__label {
-  max-width: 140px;
-  opacity: 1;
+.trow--total {
+  padding-top: var(--sp-2);
+  color: var(--ink);
+  font-size: var(--fs-md);
 }
 
-/* شارة عدّاد على أيقونة الدوك */
-.dock__badge {
-  position: absolute;
-  top: 6px;
-  inset-inline-end: 12px;
-  min-width: 19px;
-  height: 19px;
-  padding-inline: 5px;
-  border-radius: var(--r-full);
-  background: var(--brand-gradient);
-  color: #fff;
-  font-family: var(--font-num);
-  font-size: var(--fs-2xs);
-  font-weight: 800;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 2px 8px rgb(var(--brand-glow) / 0.5);
+/* الإجمالي الكبير: لوحة حبر بأرقام الإيصال */
+.total-plate {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-sm);
+  background: var(--ink);
+  color: var(--paper);
 }
-/* العنصر النشط مش محتاج عدّاد — عنوانه ظاهر أصلاً، والشارة كانت
-   هتتقص من حدود الصف القابل للتمرير. */
-.dock__item.is-active .dock__badge { display: none; }
+.total-plate__label {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+.total-plate__amount {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.total-plate__cur {
+  font-family: var(--font-ui);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  margin-inline-start: 6px;
+  opacity: 0.8;
+}
 
 /* --------------------------- شاشات أصغر / بورتريه ------------------------- */
-@media (max-width: 1100px) {
-  :root { --sidebar-w: 300px; }
+/* السطر التوضيحي تحت العنوان رفاهية: بيظهر على الشاشات الواسعة بس،
+   عشان التبويبات (الأهم) ما تتزاحمش مع الساعة والمستخدم. */
+@media (max-width: 1500px) {
+  .topbar__sub { display: none; }
 }
 
-@media (max-width: 1200px) {
+/* 4 تبويبات أو أكتر: عنوان الشاشة بيبقى للقارئ الصوتي بس (الـ h1 موجود) —
+   التبويبات نفسها بتقول الكاشير فين، والمكان محتاجينه للساعة والمستخدم. */
+@media (max-width: 1400px) {
+  .topbar--crowded .topbar__titles {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 1280px) {
   /* أول حاجة بتروح: هوية الجهاز — بتفضل في الفاتورة وفي شاشة الدخول */
   .station { display: none; }
 }
 
-@media (max-width: 1000px) {
-  /* بعدها الاسم المكتوب — العلامة لوحدها كفاية للتعرّف */
+@media (max-width: 1100px) {
+  :root { --ticket-w: 340px; }
+  .topbar__titles { display: none; }
   .topbar .wordmark { display: none; }
   .topbar .logo { gap: 0; }
+  .userchip__meta { display: none; }
+  .userchip { padding-inline-end: 4px; }
 }
 
 @media (max-width: 900px) {
   .shell__content { flex-direction: column-reverse; }
-  .sidebar {
+  .ticket {
     width: 100%;
     max-height: 46dvh;
-    border-top: 1px solid var(--panel-line);
+    border-inline-end: 0;
+    border-top: var(--bw-lg) solid var(--edge);
   }
-  .topbar__sub, .clock { display: none; }
-  .topbar__divider:first-of-type { display: none; }
+  .ticket::before { display: none; }
+
+  /* التبويبات تنزل سطر لوحدها بعرض الشاشة */
+  .topbar { flex-wrap: wrap; row-gap: 0; padding-top: var(--sp-2); }
+  .topbar__start, .topbar__end { padding-bottom: var(--sp-2); }
+  .modetabs { order: 3; flex: 1 0 100%; align-self: auto; }
+  .modetab { flex: 1 1 0; justify-content: center; padding-inline: var(--sp-3); }
+  .clock { display: none; }
 }
 
 @media (max-width: 560px) {
-  .userchip__meta { display: none; }
-  .userchip { padding-inline-end: 5px; }
-  .dock { width: 100%; }
-  .dock__items { width: 100%; }
-  .dock__item { flex: 1 1 0; min-width: 0; }
-  .dock__item.is-active { min-width: 0; }
+  .modetab { font-size: var(--fs-sm); gap: 6px; }
+  .modetab__label { display: none; }
+  .modetab.is-active .modetab__label { display: inline; }
 }

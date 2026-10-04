@@ -16,12 +16,16 @@ import {
 } from "../../../components/icons";
 
 const METHOD_ICONS: Record<PaymentMethod, JSX.Element> = {
-  cash: <IconCash size={16} />,
-  card: <IconCard size={16} />,
-  other: <IconWallet size={16} />,
+  cash: <IconCash size={18} />,
+  card: <IconCard size={18} />,
+  other: <IconWallet size={18} />,
 };
 
-/** كرت طلب مفتوح مع أزرار الدفع والإلغاء. */
+/**
+ * قصاصة طلب مفتوح: رقم الشيك بالحبر الأحمر زي بلوك الشيكات، البنود بخط
+ * منقّط، والإجمالي تحته بخط مزدوج. أزرار الدفع مفاتيح — كاش هو الأشيع،
+ * فهو الزر الأساسي.
+ */
 export const OrderCard = memo(function OrderCard({
   order,
   paying,
@@ -37,41 +41,40 @@ export const OrderCard = memo(function OrderCard({
   const waited = minutesSince(order.created_at);
 
   return (
-    <article className="ordercard">
-      <div className="ordercard__head">
-        <span className="ordercard__num num">{orderNo(order.id)}</span>
+    <article className="slip">
+      <header className="slip__head">
+        <span className="slip__no num">{orderNo(order.id)}</span>
         <StatusBadge status={order.status} />
-      </div>
+      </header>
 
-      <div className="ordercard__meta">
-        <OrderTypeIcon type={order.order_type} />
-        {order.table_label ?? ORDER_TYPE_LABELS[order.order_type]}
+      <div className="slip__meta">
+        <OrderTypeIcon type={order.order_type} size={16} />
+        <span>{order.table_label ?? ORDER_TYPE_LABELS[order.order_type]}</span>
         <span aria-hidden="true">·</span>
-        <IconClock size={14} />
-        {humanDuration(waited)}
+        <IconClock size={15} />
+        <span className="num">{humanDuration(waited)}</span>
       </div>
 
-      <div className="ordercard__items">
+      <ul className="slip__items">
         {order.items.map((item) => (
-          <div key={item.id} className="ordercard__item">
-            <span className="u-truncate">
-              {item.item_name} <span className="u-muted num">× {item.quantity}</span>
-            </span>
+          <li key={item.id} className="slip__item">
+            <span className="slip__qty num">{item.quantity}×</span>
+            <span className="u-truncate">{item.item_name}</span>
+            <span className="trow__dots" aria-hidden="true" />
             <span className="num">{money(Number(item.unit_price) * item.quantity)}</span>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <div className="ordercard__total">
-        <span style={{ fontWeight: 700 }}>الإجمالي</span>
-        <span className="ordercard__amount">
-          {money(order.total)} <span className="menucard__cur">{currency}</span>
+      <div className="slip__total">
+        <span className="slip__total-label">الإجمالي</span>
+        <span className="slip__amount num">
+          {money(order.total)}
+          <span className="slip__cur">{currency}</span>
         </span>
       </div>
 
-      <div className="ordercard__pay">
-        {/* كاش هو الأشيع، فهو الزر الأساسي — والباقي هادي عشان
-            الكاشير ما يضيّعش وقت في الاختيار. */}
+      <div className="slip__pay" role="group" aria-label="طريقة الدفع">
         {PAYMENT_METHODS.map((m) => (
           <Button
             key={m}
@@ -91,7 +94,7 @@ export const OrderCard = memo(function OrderCard({
         size="sm"
         block
         icon={<IconClose size={15} />}
-        style={{ color: "var(--danger)" }}
+        className="slip__cancel"
         onClick={() => onCancel(order)}
       >
         إلغاء الطلب

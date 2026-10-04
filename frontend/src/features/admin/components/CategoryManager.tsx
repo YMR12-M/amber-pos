@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { api } from "../../../api";
 import type { Category, MenuItem } from "../../../types";
+import { hueOf } from "../../../lib/hue";
 import { Button, Card, CardHead, IconButton, Input, useDialog, useToast } from "../../../components/ui";
+import { CategoryGlyph } from "../../../components/icons/glyphs";
 import { IconEdit, IconPlus, IconTag, IconTrash } from "../../../components/icons";
 
 /**
@@ -123,7 +125,8 @@ export function CategoryManager({
       ) : (
         <div className="catlist" style={{ marginTop: 14 }}>
           {categories.map((c) => (
-            <div key={c.id} className="catrow">
+            <div key={c.id} className="catrow" data-hue={hueOf(c.id)}>
+              <CategoryGlyph name={c.name} size={26} />
               <span className="catrow__name">{c.name}</span>
               <span className="catrow__count num">{countFor(c.id)} صنف</span>
               <span className="catrow__spacer" />

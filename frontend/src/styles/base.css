@@ -1,5 +1,5 @@
 /* ============================================================================
-   AMBER POS — Base / Reset
+   عنبر · AMBER POS — Base / Reset
    ========================================================================== */
 
 *,
@@ -24,28 +24,28 @@ body,
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-size: var(--fs-base);
   font-weight: 500;
   line-height: 1.6;
-  color: var(--text);
-  background: var(--app-bg);
+  color: var(--ink);
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow: hidden; /* الشِل بيتحكم في السكرول بنفسه */
 }
 
-/* توهج خفيف في الخلفية — بيدي إحساس العمق من غير أي تكلفة أداء */
+/* ملمس الورق — طبقة ثابتة واحدة ورا المحتوى، مفيش تدرّجات ولا توهّج */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  pointer-events: none;
   z-index: 0;
-  background:
-    radial-gradient(1100px 620px at 92% -12%, rgb(var(--brand-glow) / 0.1), transparent 62%),
-    radial-gradient(900px 520px at 4% 108%, rgb(37 99 235 / 0.07), transparent 60%);
+  pointer-events: none;
+  background-image: var(--grain);
+  background-size: 200px 200px;
+  opacity: var(--grain-opacity);
 }
 
 img,
@@ -80,52 +80,59 @@ table {
   border-collapse: collapse;
 }
 
+/* العناوين بخط اللافتات. العربي ما بيتتبّعش (letter-spacing) أبداً —
+   التتبّع بيقطّع اتصال الحروف. */
 h1, h2, h3, h4 {
+  font-family: var(--font-display);
   font-weight: 700;
   line-height: 1.3;
-  letter-spacing: -0.01em;
 }
 
 ::selection {
-  background: rgb(var(--brand-glow) / 0.28);
+  background: var(--amber);
+  color: var(--on-amber);
 }
 
-/* --- Focus: ظاهر للكيبورد فقط ------------------------------------------- */
+/* --- Focus: ظاهر للكيبورد فقط، حلقة تركواز بتتبع زوايا العنصر ---------------- */
 :focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+:focus:not(:focus-visible) {
   outline: none;
-  box-shadow: var(--ring);
-  border-radius: var(--r-xs);
 }
 
-/* --- Scrollbars ---------------------------------------------------------- */
+/* --- Scrollbars: مربّعة زي الباقي ------------------------------------------- */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--line-strong) transparent;
+  scrollbar-color: var(--rule-strong) transparent;
 }
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--line-strong);
-  border-radius: var(--r-full);
+  background: var(--rule-strong);
   border: 3px solid transparent;
   background-clip: content-box;
+  border-radius: var(--r-xs);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--ink-muted);
   background-clip: content-box;
 }
 
 /* --- Utilities ----------------------------------------------------------- */
+
+/* الأرقام والفلوس: خط الإيصال، أعمدة متعامدة */
 .num {
   font-family: var(--font-num);
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1, "lnum" 1;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .u-truncate {
@@ -160,7 +167,7 @@ h1, h2, h3, h4 {
 }
 
 .u-grow { flex: 1; min-width: 0; }
-.u-muted { color: var(--text-muted); }
+.u-muted { color: var(--ink-muted); }
 
 /* رابط تخطي المحتوى — مخفي لحد ما ياخد فوكس من الكيبورد */
 .skip-link {
@@ -169,12 +176,13 @@ h1, h2, h3, h4 {
   top: -100px;
   z-index: 200;
   padding: var(--sp-3) var(--sp-4);
+  border: var(--bw) solid var(--edge);
   border-radius: var(--r-sm);
-  background: var(--panel);
-  color: var(--panel-text);
+  background: var(--amber);
+  color: var(--on-amber);
   font-size: var(--fs-sm);
   font-weight: 700;
-  box-shadow: var(--sh-lg);
+  box-shadow: var(--key);
   transition: top var(--t-base) var(--ease-out);
 }
 .skip-link:focus-visible { top: var(--sp-3); }
@@ -190,25 +198,36 @@ h1, h2, h3, h4 {
   border: 0;
 }
 
-/* --- Motion ------------------------------------------------------------- */
+/* --- Motion --------------------------------------------------------------
+   كل حاجة ميكانيكية: مفتاح بينضغط · ورقة بتتطبع · ختم بينزل. */
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
-@keyframes rise-in {
-  from { opacity: 0; transform: translateY(10px) scale(0.985); }
+/* ورقة بتنزل على المكتب */
+@keyframes slip-in {
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
 }
 
+/* سطر بيتطبع في الشيك: بيطلع من فوق زي ورق الطابعة */
+@keyframes feed-in {
+  from { opacity: 0; transform: translateY(-14px); clip-path: inset(0 0 100% 0); }
+  to   { opacity: 1; transform: none; clip-path: inset(0); }
+}
+
+/* ختم بينزل: كبير وشفاف، وبيستقر بخبطة صغيرة */
+@keyframes thud {
+  0%   { opacity: 0; transform: rotate(var(--tilt, -6deg)) scale(1.7); }
+  55%  { opacity: 1; transform: rotate(var(--tilt, -6deg)) scale(0.94); }
+  100% { opacity: 1; transform: rotate(var(--tilt, -6deg)) scale(1); }
+}
+
+/* عدّاد الكمية على المفتاح */
 @keyframes pop-in {
-  0%   { opacity: 0; transform: scale(0.94); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-@keyframes slide-in-end {
-  from { opacity: 0; transform: translateY(16px) scale(0.96); }
-  to   { opacity: 1; transform: none; }
+  0%   { opacity: 0; transform: scale(0.6) rotate(-8deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
 }
 
 @keyframes spin {
@@ -219,10 +238,10 @@ h1, h2, h3, h4 {
   100% { transform: translateX(-100%); }
 }
 
-@keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0 rgb(var(--brand-glow) / 0.45); }
-  70%  { box-shadow: 0 0 0 12px rgb(var(--brand-glow) / 0); }
-  100% { box-shadow: 0 0 0 0 rgb(var(--brand-glow) / 0); }
+/* الطلب المتأخر: وميض بطيء بخطوتين مش نبض ناعم */
+@keyframes blink-step {
+  0%, 60%  { opacity: 1; }
+  61%, 100% { opacity: 0.35; }
 }
 
 @media (prefers-reduced-motion: reduce) {

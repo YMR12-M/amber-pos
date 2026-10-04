@@ -4,6 +4,10 @@ import type { ReactNode, SVGProps } from "react";
  * مجموعة أيقونات SVG inline — من غير أي مكتبة خارجية.
  * كلها بترث اللون من `currentColor` والحجم من prop واحد.
  * إضافة أيقونة جديدة = دالة واحدة تحت.
+ *
+ * الأسلوب: خط 2px بنهايات مربّعة وزوايا حادة — زي حروف اللافتات المطبوعة،
+ * مش الأيقونات المدوّرة الجاهزة. (النقط الصغيرة زي نقطة التعجّب بتتحوّل
+ * لمربّع صغير لوحدها بسبب النهايات المربّعة.)
  */
 export interface IconProps extends Omit<SVGProps<SVGSVGElement>, "children"> {
   size?: number;
@@ -17,9 +21,9 @@ function Svg({ size = 22, children, ...props }: IconProps & { children: ReactNod
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      strokeWidth={2}
+      strokeLinecap="square"
+      strokeLinejoin="miter"
       aria-hidden="true"
       focusable="false"
       {...props}

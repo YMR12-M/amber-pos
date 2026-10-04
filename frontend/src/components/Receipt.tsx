@@ -125,7 +125,7 @@ export default function Receipt({
       {discount > 0 && (
         <div className="receipt__row">
           <span>الخصم</span>
-          <span className="num">− {money(discount)}</span>
+          <span className="num">{ltr(`− ${money(discount)}`)}</span>
         </div>
       )}
       {tax > 0 && (
