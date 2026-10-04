@@ -128,6 +128,7 @@ async function applySchema() {
     port: env.db.port,
     user: env.db.user,
     password: env.db.password,
+    ssl: env.db.ssl ? { rejectUnauthorized: true } : undefined,
     multipleStatements: true,
   });
 
@@ -259,6 +260,7 @@ async function main() {
     user: env.db.user,
     password: env.db.password,
     database: env.db.database,
+    ssl: env.db.ssl ? { rejectUnauthorized: true } : undefined,
   });
 
   try {

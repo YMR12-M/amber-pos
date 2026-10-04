@@ -84,6 +84,8 @@ const db = {
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "pos_system",
+  /** TLS للاتصال بالداتابيز — مطلوب مع الخدمات المُدارة (Aiven · RDS · TiDB). مقفول افتراضياً. */
+  ssl: bool(process.env.DB_SSL),
 };
 
 /** فحوصات بتتطبّق في الإنتاج بس — التطوير المحلي بيفضل مريح. */
